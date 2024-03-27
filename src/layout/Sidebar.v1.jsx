@@ -1,19 +1,16 @@
-// styled components
-import "./sidebar.scss";
 // components
 import Logo from "@components/Logo";
 import { NavLink } from "react-router-dom";
 import Collapse from "@mui/material/Collapse";
 import { Fragment } from "react";
 
+// hooks
 import { useState, useEffect } from "react";
-import { useWindowSize } from "react-use";
 
 // constants
 import ROUTES from "@constants/routes";
 
-const Sidebar = () => {
-  const { width } = useWindowSize();
+const SidebarV1 = () => {
   const [active, setActive] = useState("Dashboard");
 
   useEffect(() => {
@@ -29,7 +26,7 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="wrapper">
+    <div>
       <Logo />
       <nav className="menu">
         {ROUTES.map((route, index) => {
@@ -111,4 +108,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default SidebarV1;

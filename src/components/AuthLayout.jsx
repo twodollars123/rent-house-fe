@@ -47,6 +47,7 @@ const AuthLayout = () => {
       return;
     }
     localStorage.setItem("user_email", user.data.metadata.email);
+    localStorage.setItem("user_token", user.data.metadata.email);
     navigate("/");
   };
 

@@ -26,9 +26,10 @@ import ScrollToTop from "@components/ScrollToTop";
 import Loader from "@components/Loader";
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import Sidebar from "@layout/Sidebar";
 import Copyright from "@components/Copyright";
 import AppBar from "@layout/AppBar";
+import Home from "@pages/Home";
+import SidebarV1 from "@layout/Sidebar.v1";
 
 // pages
 const Login = lazy(() => import("@pages/Login"));
@@ -62,7 +63,6 @@ const App = () => {
         {width < 1280 && withSidebar && <AppBar />}
         <div className={`app ${!withSidebar ? "fluid" : ""}`} ref={appRef}>
           <ScrollToTop />
-          {withSidebar && <Sidebar />}
           <div className="app_content">
             {width >= 1280 && withSidebar && <AppBar />}
             <Suspense fallback={<Loader />}>
@@ -70,6 +70,7 @@ const App = () => {
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route path="banners" element={<Banners />} />
+                  <Route path="/" element={<Home />} />
                   <Route path="*" element={<Navigate to="/404" />} />
                   <Route path="/404" element={<PageNotFound />} />
                 </Routes>
