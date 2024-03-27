@@ -30,7 +30,6 @@ const Sidebar = () => {
 
   return (
     <div className="wrapper">
-      <Logo />
       <nav className="menu">
         {ROUTES.map((route, index) => {
           return (
