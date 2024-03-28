@@ -1,0 +1,19 @@
+.content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  //   &:hover {
+  //     overflow: auto;
+  //   }
+}
+
+.wrapper {
+  max-width: 25%;
+  min-width: 25%;
+  padding-right: 4px;
+  height: 80vh;
+  overflow-y: hidden;
+  flex: 1;
+  &:hover {
+    overflow-y: auto;
+  }
+}
