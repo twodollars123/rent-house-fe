@@ -5,29 +5,36 @@ import Sidebar from "@layout/Sidebar";
 
 import "./home.scss";
 
+//assets
+import light from "@assets/logo_light.svg";
+
 const Home = () => {
   const app = [
     {
       id: 1,
-      img: "s",
-      name: "a",
-      description: "abc",
+      avatar: light,
+      img: [light],
+      name: "tuannv",
+      description:
+        "tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,",
     },
     {
       id: 2,
-      img: "s",
-      name: "b",
-      description: "abc",
+      avatar: light,
+      img: [light],
+      name: "nguyen van tuan",
+      description:
+        "tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua ",
     },
     {
       id: 3,
-      img: "s",
+      img: [],
       name: "ab",
       description: "abc",
     },
     {
       id: 4,
-      img: "s",
+      img: [],
       name: "ab",
       description: "abc",
     },
@@ -39,8 +46,8 @@ const Home = () => {
         <Sidebar />
         <div className="min-w-[600px] flex flex-col overflow-auto max-h-[80vh] gap-10 content">
           {app &&
-            app.map((card) => {
-              return <AppCard app={card} index={card.id} />;
+            app.map((card, index) => {
+              return <AppCard app={card} index={index} />;
             })}
         </div>
         <div className="wrapper">thông tin ngoài lề thời tiết chứng khoán</div>

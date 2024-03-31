@@ -1,0 +1,16 @@
+.user-name {
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.content-post {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .bottom-post {
+    margin-top: auto;
+  }
+}
