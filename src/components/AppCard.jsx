@@ -15,9 +15,21 @@ const AppCard = ({ app, index }) => {
   const [titleRef, { width: titleWidth }] = useMeasure();
   const [descriptionRef, { width: descriptionWidth }] = useMeasure();
 
+  const optionViewImg = () => {
+    if (app.img && app.img.length <= 1) {
+      return 1;
+    } else if (app.img && app.img.length === 2) {
+      return 2;
+    } else if (app.img && app.img.length === 3) {
+      return 3;
+    } else {
+      return 4;
+    }
+  };
+
   return (
     <Spring
-      className="card flex flex-col items-stretch gap-4 !pt-5 !px-5 min-h-[500px] min-w-[600px]"
+      className="card flex flex-col gap-4 !pt-5 !px-5 min-h-[500px] min-w-[600px] cursor-pointer"
       type="slideUp"
       index={index}
     >
@@ -51,21 +63,84 @@ const AppCard = ({ app, index }) => {
       {/* content  */}
       <div className="flex flex-col gap-4">
         <p className="content-post">{app.description}</p>
-        <div className="flex justify-between items-center mx-16 grow">
-          {app.img && app.img.length <= 1 && (
+        {optionViewImg() <= 1 && (
+          <div className="flex justify-between items-center grow w-full">
             <img
-              src={app.img}
+              src={app.img[0]}
               alt=""
-              className="max-h-[240px] max-w-[500px] overflow-hidden object-contain"
+              className="max-h-[220px] max-w-[100%] overflow-hidden object-contain"
             />
-          )}
-        </div>
+          </div>
+        )}
+        {optionViewImg() === 2 && (
+          <div className="flex gap-1 w-full justify-between grow">
+            <img
+              src={app.img[0]}
+              alt=""
+              className="max-h-[240px] max-w-[50%] overflow-hidden object-contain border-2 p-1 rounded-lg "
+            />
+            <img
+              src={app.img[1]}
+              alt=""
+              className="max-h-[240px] max-w-[50%] overflow-hidden object-contain border-2 p-1 rounded-lg "
+            />
+          </div>
+        )}
+
+        {optionViewImg() === 3 && (
+          <div className="flex gap-1 w-full justify-between grow">
+            <img
+              src={app.img[0]}
+              alt=""
+              className="max-h-[240px] max-w-[60%] overflow-hidden object-contain border-2 p-1 rounded-lg "
+            />
+            <div className="flex flex-col justify-between grow max-h-[240px] gap-1">
+              <img
+                src={app.img[1]}
+                alt=""
+                className="max-h-[50%] max-w-[100%] overflow-hidden object-contain border-2 p-1 rounded-lg "
+              />
+              <img
+                src={app.img[2]}
+                alt=""
+                className="max-h-[50%] max-w-[100%] overflow-hidden object-contain border-2 p-1 rounded-lg "
+              />
+            </div>
+          </div>
+        )}
+
+        {optionViewImg() === 4 && (
+          <div className="flex gap-1 w-full justify-between grow">
+            <img
+              src={app.img[0]}
+              alt=""
+              className="max-h-[240px] w-3/5 overflow-hidden object-contain border-2 p-1 rounded-lg shrink"
+            />
+            <div className="flex flex-col justify-between grow max-h-[240px] gap-1 w-2/5">
+              <img
+                src={app.img[1]}
+                alt=""
+                className="max-h-[50%] max-w-[100%] overflow-hidden object-contain border-2 p-1 rounded-lg "
+              />
+              <div className="relative max-h-[50%] max-w-[100%] border-2 p-1 rounded-lg backdrop-blur-sm">
+                <img
+                  src={app.img[2]}
+                  alt=""
+                  className="max-h-[100%] max-w-[100%] overflow-hidden object-contain "
+                />
+                <div className="absolute backdrop-opacity-30 backdrop-invert bg-white/30 w-full h-full top-0 right-0 rounded-lg flex items-center justify-center text-blue-600 text-xl font-medium">
+                  + {app.img.length - 3}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       {/* them gach duoi */}
       {/* action  */}
-      <div className="flex justify-around mt-auto">
-        <div className="text-btn">thich</div>
-        <div className="text-btn">comment</div>
+      <div className="flex justify-around mt-auto h-16 pt-4 shrink">
+        <div className="text-btn cursor-pointer">Thich 100N</div>
+        <div className="text-btn cursor-pointer">Binh luan 200N</div>
       </div>
     </Spring>
   );

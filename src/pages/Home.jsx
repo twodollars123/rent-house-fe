@@ -7,6 +7,8 @@ import "./home.scss";
 
 //assets
 import light from "@assets/logo_light.svg";
+import dark from "@assets/logo_dark.svg";
+import house from "@assets/house.png";
 
 const Home = () => {
   const app = [
@@ -21,20 +23,20 @@ const Home = () => {
     {
       id: 2,
       avatar: light,
-      img: [light],
+      img: [light, dark],
       name: "nguyen van tuan",
       description:
         "tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua ",
     },
     {
       id: 3,
-      img: [],
+      img: [light, dark, house],
       name: "ab",
       description: "abc",
     },
     {
       id: 4,
-      img: [],
+      img: [light, dark, house, house, house],
       name: "ab",
       description: "abc",
     },
