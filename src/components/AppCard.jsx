@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom";
 // components
 import Spring from "@components/Spring";
 import Switch from "@ui/Switch";
@@ -28,6 +29,7 @@ const AppCard = ({ app, index }) => {
   };
 
   return (
+    // <NavLink to="/detail-post">
     <Spring
       className="card flex flex-col gap-4 !pt-5 !px-5 min-h-[500px] min-w-[600px] cursor-pointer"
       type="slideUp"
@@ -143,6 +145,7 @@ const AppCard = ({ app, index }) => {
         <div className="text-btn cursor-pointer">Binh luan 200N</div>
       </div>
     </Spring>
+    // </NavLink>
   );
 };
 

@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { useWindowSize } from "react-use";
 
 // constants
-import ROUTES from "@constants/routes";
+import ROUTES from "@constants/routes.v2";
 
 const Sidebar = () => {
   const { width } = useWindowSize();

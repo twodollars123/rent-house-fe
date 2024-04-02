@@ -35,6 +35,9 @@ import SidebarV1 from "@layout/Sidebar.v1";
 const Login = lazy(() => import("@pages/Login"));
 const Banners = lazy(() => import("@pages/Banners"));
 const PageNotFound = lazy(() => import("@pages/PageNotFound"));
+const PostEdit = lazy(() => import("@pages/EditProduct"));
+const GeneralSettings = lazy(() => import("@pages/GeneralSettings"));
+const DetailPost = lazy(() => import("@pages/DetailPost"));
 
 const App = () => {
   const { width } = useWindowSize();
@@ -69,6 +72,12 @@ const App = () => {
               <div className="main">
                 <Routes>
                   <Route path="/login" element={<Login />} />
+                  <Route path="/post-editor" element={<PostEdit />} />
+                  <Route path="/detail-post" element={<DetailPost />} />
+                  <Route
+                    path="general-settings"
+                    element={<GeneralSettings />}
+                  />
                   <Route path="banners" element={<Banners />} />
                   <Route path="/" element={<Home />} />
                   <Route path="*" element={<Navigate to="/404" />} />
