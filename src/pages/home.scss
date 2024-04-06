@@ -1,6 +1,6 @@
 .content {
-  overflow-y: auto;
-  overflow-x: hidden;
+  // overflow-y: auto;
+  // overflow-x: hidden;
   //   &:hover {
   //     overflow: auto;
   //   }
@@ -13,7 +13,7 @@
   height: 80vh;
   overflow-y: hidden;
   flex: 1;
-  &:hover {
-    overflow-y: auto;
-  }
+  // &:hover {
+  //   overflow-y: auto;
+  // }
 }

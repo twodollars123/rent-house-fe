@@ -3,6 +3,7 @@ import AppCard from "@components/AppCard";
 import PageHeader from "@layout/PageHeader";
 import Sidebar from "@layout/Sidebar";
 import Loader from "@components/Loader";
+import InfiniteScrollCustom from "@components/InfiniteScrollCustom";
 
 import "./home.scss";
 
@@ -85,9 +86,8 @@ const Home = () => {
         description: "abc",
       },
     ];
-    setItems((prevItems) => [...prevItems, ...app]);
 
-    app.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    setItems((prevItems) => [...prevItems, ...app]);
 
     setIndex((prevIndex) => prevIndex + 1);
   };
@@ -95,22 +95,27 @@ const Home = () => {
   return (
     <>
       <PageHeader title="Home" />
-      <div className="flex gap-4 justify-between">
+      <div className="flex gap-4 justify-between ">
         <Sidebar />
-
-        <InfiniteScroll
-          dataLength={items.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={"..."}
-        >
-          <div className="min-w-[600px] flex flex-col overflow-auto max-h-[80vh] gap-10 content">
+        <div id="scrollableDiv" className="overflow-auto max-h-[100vh]">
+          <InfiniteScrollCustom
+            dataLength={items.length}
+            fetchMore={fetchMoreData}
+            hasMore={items.length > 20 ? false : true}
+            className="flex flex-col gap-10 "
+            loader={<h4>Loading...</h4>}
+            endMessage={
+              <p style={{ textAlign: "center" }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }
+          >
             {items &&
               items.map((card, index) => {
                 return <AppCard app={card} index={index} />;
               })}
-          </div>
-        </InfiniteScroll>
+          </InfiniteScrollCustom>
+        </div>
 
         <div className="wrapper">thông tin ngoài lề thời tiết chứng khoán</div>
       </div>
