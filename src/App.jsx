@@ -73,7 +73,7 @@ const App = () => {
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route path="/post-editor" element={<PostEdit />} />
-                  <Route path="/detail-post" element={<DetailPost />} />
+                  <Route path="/detail-post/:id" element={<DetailPost />} />
                   <Route
                     path="general-settings"
                     element={<GeneralSettings />}
