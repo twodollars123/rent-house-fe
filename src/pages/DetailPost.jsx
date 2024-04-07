@@ -34,19 +34,19 @@ const DetailPost = () => {
   }, []);
 
   return (
-    <div className="flex shink h-[76vh]">
+    <div className="flex shink h-[80vh]">
       <div className="w-9/12 h-full">
         <Fade />
       </div>
       <div
         className="w-3/12 flex flex-col p-3"
-        style={{ backgroundColor: "#e2e1e1" }}
+        style={{ backgroundColor: "#f1f1f1" }}
       >
         {/* header */}
         <div className="flex flex-row justify-between items-center">
           {/* avartar-nameUser-createdPost */}
           <div className="flex flex-row gap-2 items-center">
-            <img className="h-9 w-auto" src={light} alt={""} />
+            <img className="h-9 w-auto" src={house} alt={""} />
             <div className="flex flex-col">
               <p className="max-w-[400px] w-full leading-[1.4] user-name">
                 <TruncatedText text={"tuannv"} width={180} lines={1} />
