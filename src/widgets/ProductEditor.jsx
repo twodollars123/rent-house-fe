@@ -9,6 +9,7 @@ import MediaDropPlaceholder from "@ui/MediaDropPlaceholder";
 
 // hooks
 import { useForm, Controller } from "react-hook-form";
+import { useState } from "react";
 
 // constants
 import {
@@ -24,31 +25,78 @@ import {
 import classNames from "classnames";
 import dayjs from "dayjs";
 
+import countryList from "react-select-country-list";
+import { City, State } from "country-state-city";
+
+// styling
+import styled from "styled-components/macro";
+import theme from "styled-theming";
+
+const StyledLabel = styled.label`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  .radio {
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--input-border);
+    border-radius: 50%;
+    position: relative;
+    transition: border-color var(--transition);
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--accent);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+  }
+
+  &.active .radio {
+    border-color: ${theme("theme", {
+      light: "var(--gray)",
+      dark: "#fff",
+    })};
+
+    &::after {
+      opacity: 1;
+    }
+  }
+`;
+
 const ProductEditor = () => {
   const categories = PRODUCT_CATEGORIES.filter(
     (category) => category.value !== "all"
   );
-  const productDescription = `Ut tortor ex, pellentesque nec volutpat vel, congue eu nibh. Sed posuere ipsum ut ornare ultrices. Aliquam condimentum ultricies lacinia. Aenean ac dolor mauris. Curabitur cursus mi ac urna vestibulum consectetur. Praesent vulputate eleifend ipsum at ultrices. Proin sed elementum diam, in ullamcorper risus`;
   const defaultValues = {
     image1: "",
     image2: "",
     image3: "",
     image4: "",
-    productType: PRODUCT_TYPE_OPTIONS[0],
-    dimensions: "10 * 10 * 10",
-    weight: 0.1,
-    description: productDescription,
-    productName: "Sport Smart Watch",
-    brandName: "Pineapple",
+    productType: "",
+    dimensions: "",
+    weight: "",
+    description: "",
+    productName: "",
+    brandName: "",
     category: categories[0],
-    regularPrice: 1000,
-    salePrice: 800,
+    regularPrice: "",
+    salePrice: "",
     productSchedule: [dayjs().startOf("week"), dayjs().endOf("week")],
-    promoType: PROMOTIONAL_OPTIONS[0],
-    stockStatus: STOCK_STATUS_OPTIONS[0],
-    productSKU: "SKU-123456",
-    qty: 100,
-    unit: UNITS_OPTIONS[0],
+    promoType: "",
+    stockStatus: "",
+    productSKU: "",
+    qty: "",
+    unit: "",
   };
   const {
     register,
@@ -59,16 +107,52 @@ const ProductEditor = () => {
     defaultValues: defaultValues,
   });
 
+  // eslint-disable-next-line no-unused-vars
+  const [selectedCountry, setSelectedCountry] = useState();
+  // eslint-disable-next-line no-unused-vars
+  const [selectedCity, setSelectedCity] = useState();
+  // eslint-disable-next-line no-unused-vars
+  const [selectedDistrict, setSelectedDistrict] = useState();
+  const [cities, setCities] = useState([]);
+  const [districts, setDistrict] = useState([]);
+
+  const getCountriesOptions = () => {
+    let countries = countryList().getData();
+    for (let i = 0; i < countries.length; i++) {
+      if (countries[i].value === "RU") {
+        countries[i].label = "Russia [terrorist state]";
+      }
+    }
+    return countries;
+  };
+
+  const handleCountryChange = (country) => {
+    setSelectedCountry(country);
+    setSelectedCity(null);
+    let options = [];
+    const rawData = City.getCitiesOfCountry(country.value);
+    rawData.map((item) => options.push({ value: item.name, label: item.name }));
+    setCities(options);
+  };
+
+  const handleCityChange = (city) => {
+    setSelectedCity(city);
+    setSelectedDistrict(null);
+    let options = [];
+    const rawData = State.getStatesOfCountry(selectedCountry);
+    rawData.map((item) => options.push({ value: item.name, label: item.name }));
+    setDistrict(options);
+  };
+  const [checkedBed, setCheckedBed] = useState(false);
+  const [checkedWardrobe, setCheckedWardrobe] = useState(false);
+  const [checkedKitchen, setCheckedKitchen] = useState(false);
+  const [checkedClosedToilet, setCheckedClosedToilet] = useState(false);
+
   // do something with the data
   const handlePublish = (data) => {
     console.log(data);
+    console.log("checkedState", checkedBed);
     toast.success("Product published successfully");
-  };
-
-  // do something with the data
-  const handleSave = (data) => {
-    console.log(data);
-    toast.info("Product saved successfully");
   };
 
   return (
@@ -150,22 +234,149 @@ const ProductEditor = () => {
                 {...register("description", { required: true })}
               />
             </div>
+            <div className="grid grid-cols-1  gap-y-4 gap-x-2 sm:grid-cols-3">
+              <div className="field-wrapper">
+                <label className="field-label" htmlFor="country">
+                  Country
+                </label>
+                <Controller
+                  name="country"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Select
+                        options={getCountriesOptions()}
+                        value={field.value}
+                        onChange={(value) => {
+                          field.onChange(value);
+                          handleCountryChange(value);
+                        }}
+                        placeholder="Country"
+                        isSearchable={true}
+                        innerRef={field.ref}
+                      />
+                    );
+                  }}
+                />
+              </div>
+              <div className="field-wrapper">
+                <label className="field-label" htmlFor="city">
+                  City
+                </label>
+                <Controller
+                  name="city"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Select
+                        options={cities}
+                        value={field.value}
+                        onChange={(value) => {
+                          field.onChange(value);
+                          handleCityChange(value);
+                        }}
+                        placeholder="City"
+                        isSearchable={true}
+                        innerRef={field.ref}
+                      />
+                    );
+                  }}
+                />
+              </div>
+              <div className="field-wrapper">
+                <label className="field-label" htmlFor="district">
+                  District
+                </label>
+                <Controller
+                  name="district"
+                  control={control}
+                  render={({ field }) => {
+                    return (
+                      <Select
+                        options={districts}
+                        value={field.value}
+                        onChange={(value) => {
+                          field.onChange(value);
+                          setDistrict(value);
+                        }}
+                        placeholder="District"
+                        isSearchable={true}
+                        innerRef={field.ref}
+                      />
+                    );
+                  }}
+                />
+              </div>
+            </div>
+            <div className="field-wrapper">
+              <label className="field-label" htmlFor="Address">
+                Address
+              </label>
+              <input
+                className={classNames("field-input", {
+                  "field-input--error": errors.Address,
+                })}
+                id="Address"
+                placeholder="Enter address"
+                {...register("Address", { required: true })}
+              />
+            </div>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-y-4 gap-x-2">
           <div className="field-wrapper">
             <label className="field-label" htmlFor="productName">
-              Product Name
+              Options
             </label>
-            <input
-              className={classNames("field-input", {
-                "field-input--error": errors.productName,
-              })}
-              id="productName"
-              defaultValue={defaultValues.productName}
-              placeholder="Enter product name"
-              {...register("productName", { required: true })}
-            />
+            <div className="grid grid-cols-2 grid-rows-2 gap-y-4 gap-x-2">
+              <div className="flex gap-2">
+                <label className="field-label min-w-[80px]" htmlFor="bed">
+                  Bed
+                </label>
+                <input
+                  type="checkbox"
+                  id="bed"
+                  checked={checkedBed}
+                  onChange={() => setCheckedBed(!checkedBed)}
+                />
+              </div>
+              <div className="flex gap-2">
+                <label className="field-label min-w-[80px]" htmlFor="wardrobe">
+                  Wardrobe
+                </label>
+                <input
+                  type="checkbox"
+                  id="wardrobe"
+                  checked={checkedWardrobe}
+                  onChange={() => setCheckedWardrobe(!checkedWardrobe)}
+                />
+              </div>
+              <div className="flex gap-2">
+                <label className="field-label min-w-[80px]" htmlFor="kitchen">
+                  Kitchen
+                </label>
+                <input
+                  type="checkbox"
+                  id="kitchen"
+                  checked={checkedKitchen}
+                  onChange={() => setCheckedKitchen(!checkedKitchen)}
+                />
+              </div>
+              <div className="flex gap-2">
+                <label
+                  className="field-label min-w-[80px]"
+                  htmlFor="closed_toilet"
+                >
+                  Closed toilet
+                </label>
+                <input
+                  type="checkbox"
+                  id="closed_toilet"
+                  checked={checkedClosedToilet}
+                  onChange={() => setCheckedClosedToilet(!checkedClosedToilet)}
+                />
+              </div>
+            </div>
           </div>
           <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
             <div className="field-wrapper">

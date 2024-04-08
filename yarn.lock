@@ -2848,6 +2848,11 @@ country-state-city@^3.1.4:
   resolved "https://registry.yarnpkg.com/country-state-city/-/country-state-city-3.2.1.tgz#222f8b8bb5f4d3c0244a6e630f17c981b787ed80"
   integrity sha512-kxbanqMc6izjhc/EHkGPCTabSPZ2G6eG4/97akAYHJUN4stzzFEvQPZoF8oXDQ+10gM/O/yUmISCR1ZVxyb6EA==
 
+country_state_district@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/country_state_district/-/country_state_district-1.0.6.tgz#6c33685dd9aca182334db17f82b50535706c5244"
+  integrity sha512-TZkMOkutWt/A8qHk1cD2cdg9bqcJiC1uvkhZ5zxsi5hJ+ssDPd03bVJOYkQDiZlKzCvQirg4X4baOWarff7jTA==
+
 countup.js@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/countup.js/-/countup.js-2.8.0.tgz#64951f2df3ede28839413d654d8fef28251c32a8"
