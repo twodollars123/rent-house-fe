@@ -39,15 +39,11 @@ const AuthLayout = () => {
   const onSubmit = async (data) => {
     const { email, password } = data;
     const user = await login(email, password);
-    if (
-      user.data.metadata.status !== 200 ||
-      user.data.metadata.status !== 201
-    ) {
+    if (user.data.status !== 200) {
       toast.error(user.data.metadata.message);
       return;
     }
-    localStorage.setItem("user_email", user.data.metadata.email);
-    localStorage.setItem("user_token", user.data.metadata.email);
+    localStorage.setItem("user_data", JSON.stringify(user.data.metadata));
     navigate("/");
   };
 

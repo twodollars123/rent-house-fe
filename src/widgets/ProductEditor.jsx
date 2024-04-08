@@ -12,14 +12,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 
 // constants
-import {
-  PRODUCT_CATEGORIES,
-  PAYMENT_OPTIONS,
-  PRODUCT_TYPE_OPTIONS,
-  PROMOTIONAL_OPTIONS,
-  STOCK_STATUS_OPTIONS,
-  UNITS_OPTIONS,
-} from "@constants/options";
+import { PAYMENT_OPTIONS, METHOD_PAYMENTS } from "@constants/options";
 
 // utils
 import classNames from "classnames";
@@ -28,75 +21,14 @@ import dayjs from "dayjs";
 import countryList from "react-select-country-list";
 import { City, State } from "country-state-city";
 
-// styling
-import styled from "styled-components/macro";
-import theme from "styled-theming";
-
-const StyledLabel = styled.label`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-
-  .radio {
-    width: 14px;
-    height: 14px;
-    border: 1px solid var(--input-border);
-    border-radius: 50%;
-    position: relative;
-    transition: border-color var(--transition);
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: var(--accent);
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-  }
-
-  &.active .radio {
-    border-color: ${theme("theme", {
-      light: "var(--gray)",
-      dark: "#fff",
-    })};
-
-    &::after {
-      opacity: 1;
-    }
-  }
-`;
-
 const ProductEditor = () => {
-  const categories = PRODUCT_CATEGORIES.filter(
-    (category) => category.value !== "all"
-  );
+  const userData = JSON.parse(localStorage.getItem("user_data"));
   const defaultValues = {
     image1: "",
     image2: "",
     image3: "",
     image4: "",
-    productType: "",
-    dimensions: "",
-    weight: "",
-    description: "",
-    productName: "",
-    brandName: "",
-    category: categories[0],
-    regularPrice: "",
-    salePrice: "",
     productSchedule: [dayjs().startOf("week"), dayjs().endOf("week")],
-    promoType: "",
-    stockStatus: "",
-    productSKU: "",
-    qty: "",
-    unit: "",
   };
   const {
     register,
@@ -150,8 +82,15 @@ const ProductEditor = () => {
 
   // do something with the data
   const handlePublish = (data) => {
-    console.log(data);
-    console.log("checkedState", checkedBed);
+    const payload = {
+      ...data,
+      bed: checkedBed ? 1 : 0,
+      wardrobe: checkedWardrobe ? 1 : 0,
+      kitchen: checkedKitchen ? 1 : 0,
+      electricity_price: checkedClosedToilet ? 1 : 0,
+      author_id: userData.shop.user_id || 1,
+    };
+    console.log("payload :::", payload);
     toast.success("Product published successfully");
   };
 
@@ -309,25 +248,23 @@ const ProductEditor = () => {
               </div>
             </div>
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="Address">
+              <label className="field-label" htmlFor="address">
                 Address
               </label>
               <input
                 className={classNames("field-input", {
-                  "field-input--error": errors.Address,
+                  "field-input--error": errors.address,
                 })}
-                id="Address"
+                id="address"
                 placeholder="Enter address"
-                {...register("Address", { required: true })}
+                {...register("address", { required: true })}
               />
             </div>
           </div>
         </div>
         <div className="grid grid-cols-1 gap-y-4 gap-x-2">
           <div className="field-wrapper">
-            <label className="field-label" htmlFor="productName">
-              Options
-            </label>
+            <label className="field-label">Options</label>
             <div className="grid grid-cols-2 grid-rows-2 gap-y-4 gap-x-2">
               <div className="flex gap-2">
                 <label className="field-label min-w-[80px]" htmlFor="bed">
@@ -380,73 +317,96 @@ const ProductEditor = () => {
           </div>
           <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="brandName">
-                Brand Name
+              <label className="field-label" htmlFor="roomPrice">
+                Room Price
               </label>
               <input
                 className={classNames("field-input", {
-                  "field-input--error": errors.brandName,
+                  "field-input--error": errors.roomPrice,
                 })}
-                id="brandName"
-                defaultValue={defaultValues.brandName}
-                placeholder="Enter brand name"
-                {...register("brandName", { required: true })}
+                id="roomPrice"
+                defaultValue={defaultValues.roomPrice}
+                placeholder="Enter room price"
+                {...register("roomPrice", { required: true })}
               />
             </div>
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="category">
-                Category
+              <label className="field-label" htmlFor="cleaningFee">
+                Cleaning fee
               </label>
-              <Controller
-                name="category"
-                control={control}
-                defaultValue={defaultValues.category}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    isInvalid={errors.category}
-                    id="category"
-                    placeholder="Select category"
-                    options={categories}
-                    value={field.value}
-                    onChange={(value) => field.onChange(value)}
-                  />
-                )}
+              <input
+                className={classNames("field-input", {
+                  "field-input--error": errors.cleaningFee,
+                })}
+                id="cleaningFee"
+                defaultValue={defaultValues.cleaningFee}
+                placeholder="Enter cleaninng fee"
+                {...register("cleaningFee", { required: true })}
               />
             </div>
           </div>
           <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="regularPrice">
-                Regular Price
+              <label className="field-label" htmlFor="electricPrice">
+                Electric Price
               </label>
               <input
                 className={classNames("field-input", {
-                  "field-input--error": errors.regularPrice,
+                  "field-input--error": errors.electricPrice,
                 })}
-                id="regularPrice"
-                defaultValue={defaultValues.regularPrice}
-                placeholder="$99.99"
-                {...register("regularPrice", {
+                id="electricPrice"
+                defaultValue={defaultValues.electricPrice}
+                placeholder="Enter electric price"
+                {...register("electricPrice", { required: true })}
+              />
+            </div>
+            <div className="field-wrapper">
+              <label className="field-label" htmlFor="waterPrice">
+                Water Price
+              </label>
+              <input
+                className={classNames("field-input", {
+                  "field-input--error": errors.waterPrice,
+                })}
+                id="waterPrice"
+                defaultValue={defaultValues.waterPrice}
+                placeholder="Enter water price"
+                {...register("waterPrice", { required: true })}
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
+            <div className="field-wrapper">
+              <label className="field-label" htmlFor="parking">
+                Parking area
+              </label>
+              <input
+                className={classNames("field-input", {
+                  "field-input--error": errors.parking,
+                })}
+                id="parking"
+                defaultValue={defaultValues.parking}
+                placeholder="methodPayment"
+                {...register("parking", {
                   required: true,
-                  pattern: /^[0-9]*$/,
+                  pattern: /^[0-9]/,
                 })}
               />
             </div>
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="salePrice">
-                Sale Price
+              <label className="field-label" htmlFor="maximumMember">
+                Maximum member
               </label>
               <input
                 className={classNames("field-input", {
-                  "field-input--error": errors.salePrice,
+                  "field-input--error": errors.maximumMember,
                 })}
-                id="salePrice"
-                defaultValue={defaultValues.salePrice}
-                placeholder="$99.99"
-                {...register("salePrice", {
+                id="maximumMember"
+                defaultValue={defaultValues.maximumMember}
+                placeholder="5"
+                {...register("maximumMember", {
                   required: true,
-                  pattern: /^[0-9]*$/,
+                  pattern: /^[0-9]/,
                 })}
               />
             </div>
@@ -454,7 +414,7 @@ const ProductEditor = () => {
           <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
             <div className="field-wrapper">
               <label className="field-label" htmlFor="productSchedule">
-                Schedule
+                Start date
               </label>
               <Controller
                 name="productSchedule"
@@ -473,7 +433,7 @@ const ProductEditor = () => {
                 )}
               />
             </div>
-            <div className="field-wrapper">
+            {/* <div className="field-wrapper">
               <label className="field-label" htmlFor="promoType">
                 Promotion
               </label>
@@ -494,24 +454,41 @@ const ProductEditor = () => {
                   />
                 )}
               />
+            </div> */}
+            <div className="field-wrapper">
+              <label className="field-label" htmlFor="availableRooms">
+                Amount available rooms
+              </label>
+              <input
+                className={classNames("field-input", {
+                  "field-input--error": errors.availableRooms,
+                })}
+                id="availableRooms"
+                defaultValue={defaultValues.availableRooms}
+                placeholder="5"
+                {...register("availableRooms", {
+                  required: true,
+                  pattern: /^[0-9]/,
+                })}
+              />
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-1">
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="productType">
-                Product Type
+              <label className="field-label" htmlFor="methodPayment">
+                Method payment
               </label>
               <Controller
-                name="productType"
+                name="methodPayment"
                 control={control}
                 defaultValue={defaultValues.productType}
                 rules={{ required: true }}
                 render={({ field }) => (
                   <Select
-                    isInvalid={errors.productType}
-                    id="productType"
-                    placeholder="Select product type"
-                    options={PRODUCT_TYPE_OPTIONS}
+                    isInvalid={errors.methodPayment}
+                    id="methodPayment"
+                    placeholder="Select method payment"
+                    options={METHOD_PAYMENTS}
                     onChange={(value) => {
                       field.onChange(value);
                     }}
@@ -519,107 +496,6 @@ const ProductEditor = () => {
                   />
                 )}
               />
-            </div>
-            <div className="field-wrapper">
-              <label className="field-label" htmlFor="stockStatus">
-                Stock Status
-              </label>
-              <Controller
-                name="stockStatus"
-                control={control}
-                defaultValue={defaultValues.stockStatus}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    isInvalid={errors.stockStatus}
-                    id="stockStatus"
-                    placeholder="Select stock status"
-                    options={STOCK_STATUS_OPTIONS}
-                    onChange={(value) => {
-                      field.onChange(value);
-                    }}
-                    value={field.value}
-                  />
-                )}
-              />
-            </div>
-          </div>
-          <div className="field-wrapper">
-            <label className="field-label" htmlFor="productSKU">
-              SKU
-            </label>
-            <input
-              className={classNames("field-input", {
-                "field-input--error": errors.productSKU,
-              })}
-              id="productSKU"
-              placeholder="SKU"
-              defaultValue={defaultValues.productSKU}
-              {...register("productSKU", { required: true })}
-            />
-          </div>
-          <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
-            <div className="field-wrapper">
-              <label className="field-label" htmlFor="stockStatus">
-                Stock Status
-              </label>
-              <Controller
-                name="stockStatus"
-                control={control}
-                defaultValue={defaultValues.stockStatus}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    isInvalid={errors.stockStatus}
-                    id="stockStatus"
-                    placeholder="Select stock status"
-                    options={STOCK_STATUS_OPTIONS}
-                    onChange={(value) => {
-                      field.onChange(value);
-                    }}
-                    value={field.value}
-                  />
-                )}
-              />
-            </div>
-            <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-[minmax(0,1fr)_,minmax(0,112px)]">
-              <div className="field-wrapper">
-                <label className="field-label" htmlFor="qty">
-                  Quantity in Stock
-                </label>
-                <input
-                  className={classNames("field-input", {
-                    "field-input--error": errors.qty,
-                  })}
-                  id="qty"
-                  placeholder="0"
-                  defaultValue={defaultValues.qty}
-                  {...register("qty", { required: true, pattern: /^[0-9]*$/ })}
-                />
-              </div>
-              <div className="field-wrapper">
-                <label className="field-label" htmlFor="unit">
-                  Unit
-                </label>
-                <Controller
-                  name="unit"
-                  control={control}
-                  defaultValue={defaultValues.unit}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <Select
-                      isInvalid={errors.unit}
-                      id="unit"
-                      placeholder="Pieces"
-                      options={UNITS_OPTIONS}
-                      onChange={(value) => {
-                        field.onChange(value);
-                      }}
-                      value={field.value}
-                    />
-                  )}
-                />
-              </div>
             </div>
           </div>
           <div className="field-wrapper">
