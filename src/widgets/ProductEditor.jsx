@@ -21,6 +21,9 @@ import dayjs from "dayjs";
 import countryList from "react-select-country-list";
 import { City, State } from "country-state-city";
 
+//api
+import { adddProd, addThumbnail } from "@api_services/prod.service";
+
 const ProductEditor = () => {
   const userData = JSON.parse(localStorage.getItem("user_data"));
   const defaultValues = {
@@ -81,17 +84,34 @@ const ProductEditor = () => {
   const [checkedClosedToilet, setCheckedClosedToilet] = useState(false);
 
   // do something with the data
-  const handlePublish = (data) => {
+  const handlePublish = async (data) => {
     const payload = {
       ...data,
+      geo_point: "0, 0",
       bed: checkedBed ? 1 : 0,
       wardrobe: checkedWardrobe ? 1 : 0,
       kitchen: checkedKitchen ? 1 : 0,
-      electricity_price: checkedClosedToilet ? 1 : 0,
+      closed_toilet: checkedClosedToilet ? 1 : 0,
       author_id: userData.shop.user_id || 1,
     };
     console.log("payload :::", payload);
-    toast.success("Product published successfully");
+    const newProd = (await adddProd(payload)).data.metadata.metadata.newProd[0];
+    if (newProd) {
+      console.log("newProd :::", newProd);
+      if (data.image1) {
+        let formData = new FormData();
+        formData.append("url", data.image1[0]);
+        formData.append("alt", data.image1[0].name);
+        formData.append("prod_id", newProd.id);
+
+        const addedThumnail = await addThumbnail(formData);
+        if (addedThumnail) {
+          console.log("addedThumnail", addedThumnail);
+        }
+      }
+
+      toast.success("Product published successfully");
+    }
   };
 
   return (
@@ -160,17 +180,17 @@ const ProductEditor = () => {
           </div>
           <div className="flex flex-col gap-4">
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="description">
+              <label className="field-label" htmlFor="caption">
                 Description
               </label>
               <textarea
                 className={classNames(
                   `field-input !h-[160px] !py-[15px] !overflow-y-auto`,
-                  { "field-input--error": errors.description }
+                  { "field-input--error": errors.caption }
                 )}
-                id="description"
-                defaultValue={defaultValues.description}
-                {...register("description", { required: true })}
+                id="caption"
+                defaultValue={defaultValues.caption}
+                {...register("caption", { required: true })}
               />
             </div>
             <div className="grid grid-cols-1  gap-y-4 gap-x-2 sm:grid-cols-3">
@@ -317,17 +337,17 @@ const ProductEditor = () => {
           </div>
           <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="roomPrice">
+              <label className="field-label" htmlFor="room_price">
                 Room Price
               </label>
               <input
                 className={classNames("field-input", {
-                  "field-input--error": errors.roomPrice,
+                  "field-input--error": errors.room_price,
                 })}
-                id="roomPrice"
-                defaultValue={defaultValues.roomPrice}
+                id="room_price"
+                defaultValue={defaultValues.room_price}
                 placeholder="Enter room price"
-                {...register("roomPrice", { required: true })}
+                {...register("room_price", { required: true })}
               />
             </div>
             <div className="field-wrapper">
@@ -347,31 +367,31 @@ const ProductEditor = () => {
           </div>
           <div className="grid grid-cols-1 gap-y-4 gap-x-2 sm:grid-cols-2">
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="electricPrice">
+              <label className="field-label" htmlFor="electricity_price">
                 Electric Price
               </label>
               <input
                 className={classNames("field-input", {
-                  "field-input--error": errors.electricPrice,
+                  "field-input--error": errors.electricity_price,
                 })}
-                id="electricPrice"
-                defaultValue={defaultValues.electricPrice}
+                id="electricity_price"
+                defaultValue={defaultValues.electricity_price}
                 placeholder="Enter electric price"
-                {...register("electricPrice", { required: true })}
+                {...register("electricity_price", { required: true })}
               />
             </div>
             <div className="field-wrapper">
-              <label className="field-label" htmlFor="waterPrice">
+              <label className="field-label" htmlFor="water_price">
                 Water Price
               </label>
               <input
                 className={classNames("field-input", {
-                  "field-input--error": errors.waterPrice,
+                  "field-input--error": errors.water_price,
                 })}
-                id="waterPrice"
-                defaultValue={defaultValues.waterPrice}
+                id="water_price"
+                defaultValue={defaultValues.water_price}
                 placeholder="Enter water price"
-                {...register("waterPrice", { required: true })}
+                {...register("water_price", { required: true })}
               />
             </div>
           </div>
@@ -386,7 +406,7 @@ const ProductEditor = () => {
                 })}
                 id="parking"
                 defaultValue={defaultValues.parking}
-                placeholder="methodPayment"
+                placeholder="Enter value"
                 {...register("parking", {
                   required: true,
                   pattern: /^[0-9]/,
