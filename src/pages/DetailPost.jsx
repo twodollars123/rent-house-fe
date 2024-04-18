@@ -22,7 +22,7 @@ const DetailPost = () => {
   const [data, setData] = useState({});
 
   const fetchData = async () => {
-    const res = await findProdById(id);
+    const res = await findProdById(3);
     if (res) {
       console.log("res::", res.data.metadata.metadata.prod);
       setData(res.data.metadata.metadata.prod[0]);
@@ -61,12 +61,16 @@ const DetailPost = () => {
               </p>
             </div>
           </div>
+
           {/* action */}
           <div className="flex">
             <img src={ellipsis} alt="more" className="h-6 w-auto" />
           </div>
         </div>
-
+        {/* content and comment */}
+        <div className="flex flex-col gap-4">
+          <p className="content-post">{data.caption}</p>
+        </div>
         {/* them gach duoi */}
         {/* action  */}
         <div className="flex justify-around mt-auto h-16 pt-4 shrink">

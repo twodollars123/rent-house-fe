@@ -12,16 +12,20 @@ import "@components/appCard.scss";
 
 //asssets
 import ellipsis from "@assets/icons/ellipsis.svg";
+import house from "@assets/house.png";
+
 const AppCard = ({ app, index }) => {
   const [titleRef, { width: titleWidth }] = useMeasure();
   const [descriptionRef, { width: descriptionWidth }] = useMeasure();
 
   const optionViewImg = () => {
-    if (app.img && app.img.length <= 1) {
+    if (app.listThumbs && app.listThumbs.length === 0) {
+      return 0;
+    } else if (app.listThumbs.length === 1) {
       return 1;
-    } else if (app.img && app.img.length === 2) {
+    } else if (app.listThumbs.length === 2) {
       return 2;
-    } else if (app.img && app.img.length === 3) {
+    } else if (app.listThumbs.length === 3) {
       return 3;
     } else {
       return 4;
@@ -39,7 +43,7 @@ const AppCard = ({ app, index }) => {
         <div className="flex flex-row justify-between items-center">
           {/* avartar-nameUser-createdPost */}
           <div className="flex flex-row gap-2 items-center">
-            <img className="h-9 w-auto" src={app.avatar} alt={app.name} />
+            <img className="h-9 w-auto" src={house} alt={app.name} />
             <div className="flex flex-col">
               <p
                 className="max-w-[400px] w-full leading-[1.4] user-name"
@@ -64,11 +68,20 @@ const AppCard = ({ app, index }) => {
         </div>
         {/* content  */}
         <div className="flex flex-col gap-4">
-          <p className="content-post">{app.description}</p>
-          {optionViewImg() <= 1 && (
+          <p className="content-post">{app.caption}</p>
+          {optionViewImg() === 0 && (
             <div className="flex justify-between items-center grow w-full">
               <img
-                src={app.img[0]}
+                src={house}
+                alt=""
+                className="max-h-[220px] max-w-[100%] overflow-hidden object-contain"
+              />
+            </div>
+          )}
+          {optionViewImg() === 1 && (
+            <div className="flex justify-between items-center grow w-full">
+              <img
+                src={app.listThumbs[0].url}
                 alt=""
                 className="max-h-[220px] max-w-[100%] overflow-hidden object-contain"
               />
@@ -77,12 +90,12 @@ const AppCard = ({ app, index }) => {
           {optionViewImg() === 2 && (
             <div className="flex gap-1 w-full justify-between grow">
               <img
-                src={app.img[0]}
+                src={app.listThumbs[0].url}
                 alt=""
                 className="max-h-[240px] max-w-[50%] overflow-hidden object-contain border-2 p-1 rounded-lg "
               />
               <img
-                src={app.img[1]}
+                src={app.listThumbs[1].url}
                 alt=""
                 className="max-h-[240px] max-w-[50%] overflow-hidden object-contain border-2 p-1 rounded-lg "
               />
@@ -92,18 +105,18 @@ const AppCard = ({ app, index }) => {
           {optionViewImg() === 3 && (
             <div className="flex gap-1 w-full justify-between grow">
               <img
-                src={app.img[0]}
+                src={app.listThumbs[0].url}
                 alt=""
                 className="max-h-[240px] max-w-[60%] overflow-hidden object-contain border-2 p-1 rounded-lg "
               />
               <div className="flex flex-col justify-between grow max-h-[240px] gap-1">
                 <img
-                  src={app.img[1]}
+                  src={app.listThumbs[1].url}
                   alt=""
                   className="max-h-[50%] max-w-[100%] overflow-hidden object-contain border-2 p-1 rounded-lg "
                 />
                 <img
-                  src={app.img[2]}
+                  src={app.listThumbs[2].url}
                   alt=""
                   className="max-h-[50%] max-w-[100%] overflow-hidden object-contain border-2 p-1 rounded-lg "
                 />
@@ -114,24 +127,24 @@ const AppCard = ({ app, index }) => {
           {optionViewImg() === 4 && (
             <div className="flex gap-1 w-full justify-between grow">
               <img
-                src={app.img[0]}
+                src={app.listThumbs[0].url}
                 alt=""
                 className="max-h-[240px] w-3/5 overflow-hidden object-contain border-2 p-1 rounded-lg shrink"
               />
               <div className="flex flex-col justify-between grow max-h-[240px] gap-1 w-2/5">
                 <img
-                  src={app.img[1]}
+                  src={app.listThumbs[1].url}
                   alt=""
                   className="max-h-[50%] max-w-[100%] overflow-hidden object-contain border-2 p-1 rounded-lg "
                 />
                 <div className="relative max-h-[50%] max-w-[100%] border-2 p-1 rounded-lg backdrop-blur-sm">
                   <img
-                    src={app.img[2]}
+                    src={app.listThumbs[2].url}
                     alt=""
                     className="max-h-[100%] max-w-[100%] overflow-hidden object-contain "
                   />
                   <div className="absolute backdrop-opacity-30 backdrop-invert bg-white/30 w-full h-full top-0 right-0 rounded-lg flex items-center justify-center text-blue-600 text-xl font-medium">
-                    + {app.img.length - 3}
+                    + {app.listThumbs.length - 3}
                   </div>
                 </div>
               </div>

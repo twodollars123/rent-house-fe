@@ -16,81 +16,45 @@ import house from "@assets/house.png";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useEffect } from "react";
 
+//api
+import { getPosts, getThumbs } from "@api_services/prod.service";
+
 const Home = () => {
   const [items, setItems] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const [index, setIndex] = useState(2);
+  const [page, setPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [totalPosts, setTotalPosts] = useState(100);
 
   useEffect(() => {
-    const app = [
-      {
-        id: 1,
-        avatar: light,
-        img: [light],
-        name: "tuannv",
-        description:
-          "tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,",
-      },
-      {
-        id: 2,
-        avatar: light,
-        img: [light, dark],
-        name: "nguyen van tuan",
-        description:
-          "tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua ",
-      },
-      {
-        id: 3,
-        img: [light, dark, house],
-        name: "ab",
-        description: "abc",
-      },
-      {
-        id: 4,
-        img: [light, dark, house, house, house],
-        name: "ab",
-        description: "abc",
-      },
-    ];
-    setItems(app);
-  }, []);
+    (async () => {
+      const res = await getPosts(page, itemsPerPage);
+      const initData = res.data.metadata.metadata.data;
+      setTotalPosts(res.data.metadata.metadata.totalItems);
+      const data = initData.map(async (post) => {
+        const listThumbs = (await getThumbs(post.id)).data.metadata;
+        return { ...post, listThumbs };
+      });
 
-  const fetchMoreData = () => {
-    const app = [
-      {
-        id: 1,
-        avatar: light,
-        img: [light],
-        name: "tuannv",
-        description:
-          "tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,",
-      },
-      {
-        id: 2,
-        avatar: light,
-        img: [light, dark],
-        name: "nguyen van tuan",
-        description:
-          "tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc, tuannv vua dang 1 phut truoc,  tuannv vua ",
-      },
-      {
-        id: 3,
-        img: [light, dark, house],
-        name: "ab",
-        description: "abc",
-      },
-      {
-        id: 4,
-        img: [light, dark, house, house, house],
-        name: "ab",
-        description: "abc",
-      },
-    ];
+      Promise.all(data).then((results) =>
+        setItems((prevItems) => [...prevItems, ...results])
+      );
+    })();
+    if (items.length >= totalPosts) {
+      setHasMore(false);
+    }
+  }, [page]);
 
-    setItems((prevItems) => [...prevItems, ...app]);
-
-    setIndex((prevIndex) => prevIndex + 1);
-  };
+  // const fetchMoreData = async () => {
+  //   console.log("page", page);
+  //   const data = await fetchData(page, 10);
+  //   setItems((prevItems) => [...prevItems, ...data]);
+  //   setPage(page + 1);
+  //   console.log("a");
+  //   if (data.length < itemsPerPage) {
+  //     setHasMore(false);
+  //   }
+  // };
 
   return (
     <>
@@ -100,8 +64,8 @@ const Home = () => {
         <div id="scrollableDiv" className="overflow-auto max-h-[100vh]">
           <InfiniteScrollCustom
             dataLength={items.length}
-            fetchMore={fetchMoreData}
-            hasMore={items.length > 20 ? false : true}
+            fetchMore={() => setPage((prev) => prev + 1)}
+            hasMore={hasMore}
             className="flex flex-col gap-10 "
             loader={<h4>Loading...</h4>}
             endMessage={
