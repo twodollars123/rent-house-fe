@@ -1,7 +1,6 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 // components
 import Spring from "@components/Spring";
-import Switch from "@ui/Switch";
 import TruncatedText from "@components/TruncatedText";
 
 // hooks
@@ -13,10 +12,24 @@ import "@components/appCard.scss";
 //asssets
 import ellipsis from "@assets/icons/ellipsis.svg";
 import house from "@assets/house.png";
+import { useEffect, useState } from "react";
+
+//api
+import { getInfouserById } from "@api_services/user.service";
 
 const AppCard = ({ app, index }) => {
   const [titleRef, { width: titleWidth }] = useMeasure();
-  const [descriptionRef, { width: descriptionWidth }] = useMeasure();
+  const [dataAuthor, setDataAuthor] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      if (app.author_id) {
+        const user = await getInfouserById(app.author_id);
+        console.log("user::", user);
+        setDataAuthor(user.data.metadata);
+      }
+    })();
+  }, []);
 
   const optionViewImg = () => {
     if (app.listThumbs && app.listThumbs.length === 0) {
@@ -33,42 +46,46 @@ const AppCard = ({ app, index }) => {
   };
 
   return (
-    <Link to={`/detail-post/${app.id}`}>
-      <Spring
-        className="card flex flex-col gap-4 !pt-5 !px-5 min-h-[500px] min-w-[600px] cursor-pointer"
-        type="slideUp"
-        index={index}
-      >
-        {/* header */}
-        <div className="flex flex-row justify-between items-center">
-          {/* avartar-nameUser-createdPost */}
-          <div className="flex flex-row gap-2 items-center">
-            <img className="h-9 w-auto" src={house} alt={app.name} />
-            <div className="flex flex-col">
-              <p
-                className="max-w-[400px] w-full leading-[1.4] user-name"
-                ref={titleRef}
-              >
-                <TruncatedText text={app.name} width={180} lines={1} />
-              </p>
-              <p>
-                <TruncatedText
-                  text={"vua xong"}
-                  width={"200"}
-                  lines={1}
-                  className="h-1"
-                />
-              </p>
-            </div>
-          </div>
-          {/* action */}
-          <div className="flex">
-            <img src={ellipsis} alt="more" className="h-6 w-auto" />
+    <Spring
+      className="card flex flex-col gap-4 !pt-5 !px-5 min-h-[500px] min-w-[600px] cursor-pointer"
+      type="slideUp"
+      index={index}
+    >
+      {/* header */}
+      <div className="flex flex-row justify-between items-center">
+        {/* avartar-nameUser-createdPost */}
+        <div className="flex flex-row gap-2 items-center">
+          <img
+            className="h-9 w-auto rounded-full"
+            src={dataAuthor.avatar == null ? house : dataAuthor.avatar}
+            alt={app.name}
+          />
+          <div className="flex flex-col">
+            <p
+              className="max-w-[400px] w-full leading-[1.4] user-name"
+              ref={titleRef}
+            >
+              <TruncatedText text={dataAuthor.name} width={180} lines={1} />
+            </p>
+            <p>
+              <TruncatedText
+                text={"vua xong"}
+                width={"200"}
+                lines={1}
+                className="h-1"
+              />
+            </p>
           </div>
         </div>
-        {/* content  */}
-        <div className="flex flex-col gap-4">
-          <p className="content-post">{app.caption}</p>
+        {/* action */}
+        <div className="flex">
+          <img src={ellipsis} alt="more" className="h-6 w-auto" />
+        </div>
+      </div>
+      {/* content  */}
+      <div className="flex flex-col gap-4">
+        <p className="content-post">{app.caption}</p>
+        <Link to={`/detail-post/${app.id}`}>
           {optionViewImg() === 0 && (
             <div className="flex justify-between items-center grow w-full">
               <img
@@ -150,15 +167,16 @@ const AppCard = ({ app, index }) => {
               </div>
             </div>
           )}
-        </div>
-        {/* them gach duoi */}
-        {/* action  */}
-        <div className="flex justify-around mt-auto h-16 pt-4 shrink">
-          <div className="text-btn cursor-pointer">Thich 100N</div>
-          <div className="text-btn cursor-pointer">Binh luan 200N</div>
-        </div>
-      </Spring>
-    </Link>
+        </Link>
+      </div>
+      {/* them gach duoi */}
+      {/* action  */}
+      <div className="flex justify-around mt-auto h-16 pt-4 shrink">
+        <div className="text-btn cursor-pointer">Thich 100N</div>
+        <div className="text-btn cursor-pointer">Binh luan 200N</div>
+        <div className="text-btn cursor-pointer">Dat coc</div>
+      </div>
+    </Spring>
   );
 };
 

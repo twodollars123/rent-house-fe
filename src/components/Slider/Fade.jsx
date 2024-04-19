@@ -70,7 +70,7 @@ import wallet from "@assets/coins.webp";
 //   );
 // }
 
-function Fade() {
+function Fade({ listThumbs }) {
   const settings = {
     dots: true,
     fade: true,
@@ -84,34 +84,30 @@ function Fade() {
   return (
     <div className="slider-container">
       <Slider {...settings}>
-        <div className="flex justify-between items-center">
-          <img
-            src={light}
-            alt=""
-            className="max-h-[70vh] max-w-[100%] overflow-hidden object-contain"
-          />
-        </div>
-        <div className="flex justify-between items-center grow w-[80%]">
-          <img
-            src={dark}
-            alt=""
-            className="max-h-[70vh] max-w-[100%] overflow-hidden object-contain"
-          />
-        </div>
-        <div className="flex justify-between items-center grow w-[80%]">
-          <img
-            src={house}
-            alt=""
-            className="max-h-[70vh] max-w-[100%] overflow-hidden object-contain"
-          />
-        </div>
-        <div className="flex justify-between items-center grow w-[80%]">
-          <img
-            src={wallet}
-            alt=""
-            className="max-h-[70vh] max-w-[100%] overflow-hidden object-contain"
-          />
-        </div>
+        {listThumbs &&
+          listThumbs.map((thumb, index) => {
+            return (
+              <div
+                className="flex justify-between items-center grow w-[80%]"
+                key={index}
+              >
+                <img
+                  src={thumb.url}
+                  alt=""
+                  className="max-h-[70vh] max-w-[100%] overflow-hidden object-contain"
+                />
+              </div>
+            );
+          })}
+        {listThumbs.length === 0 && (
+          <div className="flex justify-between items-center grow w-[80%]">
+            <img
+              src={house}
+              alt=""
+              className="max-h-[70vh] max-w-[100%] overflow-hidden object-contain"
+            />
+          </div>
+        )}
       </Slider>
     </div>
   );
