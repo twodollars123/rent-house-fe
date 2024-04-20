@@ -38,6 +38,7 @@ const PageNotFound = lazy(() => import("@pages/PageNotFound"));
 const PostEdit = lazy(() => import("@pages/EditProduct"));
 const GeneralSettings = lazy(() => import("@pages/GeneralSettings"));
 const DetailPost = lazy(() => import("@pages/DetailPost"));
+const SearchPage = lazy(() => import("@pages/SearchPage"));
 
 const App = () => {
   const { width } = useWindowSize();
@@ -73,6 +74,7 @@ const App = () => {
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route path="/post-editor" element={<PostEdit />} />
+                  <Route path="/search" element={<SearchPage />} />
                   <Route path="/detail-post/:id" element={<DetailPost />} />
                   <Route
                     path="general-settings"

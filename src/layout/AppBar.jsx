@@ -11,6 +11,8 @@ import { useSidebar } from "@contexts/sidebarContext";
 import { useWindowSize } from "react-use";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "@hooks/useDebounce";
+
 import Logo from "@components/Logo";
 
 const AppBar = () => {
@@ -18,8 +20,33 @@ const AppBar = () => {
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
   const [messagesPanelOpen, setMessagesPanelOpen] = useState(false);
+  const [query, setQuery] = useState("");
+
+  // const debounced = useDebounce(query, 500);
+
   const { width } = useWindowSize();
   const { theme, toggleTheme } = useTheme();
+
+  // const fetchApi = async (q, limit, type) => {
+  //   const res = await search(q, limit, type);
+  //   if (!!res) {
+  //     console.log(res);
+  //     setResultSearch(res.data);
+  //     setIsLoading(false);
+  //   } else {
+  //     setResultSearch([]);
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (!debounced.trim()) {
+  //     setResultSearch([]);
+  //     return;
+  //   }
+  //   setIsLoading(true);
+  //   fetchApi(debounced);
+  // }, [debounced]);
 
   useEffect(() => {
     setSearchModalOpen(false);
@@ -31,7 +58,33 @@ const AppBar = () => {
         <div className="flex items-center justify-between">
           <Logo />
           {width >= 768 && (
-            <Search wrapperClass="flex-1 max-w-[1054px] ml-5 mr-auto 4xl:ml-0" />
+            <div
+              className={`relative flex-1 max-w-[1054px] ml-5 mr-auto 4xl:ml-0`}
+            >
+              <input
+                className="field-input !pr-[60px]"
+                type="search"
+                placeholder={"Search..."}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+              <button
+                className={`field-btn text-red !right-[40px] transition ${
+                  query ? "opacity-100" : "opacity-0"
+                }`}
+                onClick={() => setQuery("")}
+                aria-label="Clear all"
+              >
+                <i className="icon-xmark-regular" />
+              </button>
+              <button
+                className="field-btn icon"
+                aria-label="Search"
+                onClick={() => navigate("/search", { state: query })}
+              >
+                <i className="icon-magnifying-glass-solid" />
+              </button>
+            </div>
           )}
           <div className="flex items-center gap-5 md:ml-5 xl:gap-[26px]">
             {width < 768 && (
