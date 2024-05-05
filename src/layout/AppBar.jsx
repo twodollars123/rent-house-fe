@@ -7,13 +7,16 @@ import ModalBase from "@ui/ModalBase";
 
 // hooks
 import { useTheme } from "@contexts/themeContext";
-import { useSidebar } from "@contexts/sidebarContext";
+// import { useSidebar } from "@contexts/sidebarContext";
 import { useWindowSize } from "react-use";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDebounce } from "@hooks/useDebounce";
+// import { useDebounce } from "@hooks/useDebounce";
 
 import Logo from "@components/Logo";
+
+//api
+import { getNotifications } from "@api_services/notification.service";
 
 const AppBar = () => {
   const navigate = useNavigate();
@@ -21,35 +24,27 @@ const AppBar = () => {
   const [notificationsPanelOpen, setNotificationsPanelOpen] = useState(false);
   const [messagesPanelOpen, setMessagesPanelOpen] = useState(false);
   const [query, setQuery] = useState("");
-
-  // const debounced = useDebounce(query, 500);
+  const [notiQuantity, setNotiQuantity] = useState([]);
 
   const { width } = useWindowSize();
   const { theme, toggleTheme } = useTheme();
 
-  // const fetchApi = async (q, limit, type) => {
-  //   const res = await search(q, limit, type);
-  //   if (!!res) {
-  //     console.log(res);
-  //     setResultSearch(res.data);
-  //     setIsLoading(false);
-  //   } else {
-  //     setResultSearch([]);
-  //     setIsLoading(false);
-  //   }
-  // };
+  const currentUser = JSON.parse(localStorage.getItem("user_data"));
+  // console.log("currentUser ::: ", currentUser.shop.user_id);
 
-  // useEffect(() => {
-  //   if (!debounced.trim()) {
-  //     setResultSearch([]);
-  //     return;
-  //   }
-  //   setIsLoading(true);
-  //   fetchApi(debounced);
-  // }, [debounced]);
+  const fetchDataNotidications = async () => {
+    const params = {
+      userId: currentUser.shop.user_id,
+    };
+    const res = await getNotifications(params);
+    // console.log("ress noti::", res);
+    const data = res.data.metadata.listNoti.length;
+    setNotiQuantity(data);
+  };
 
   useEffect(() => {
     setSearchModalOpen(false);
+    fetchDataNotidications();
   }, [width]);
 
   return (
@@ -120,11 +115,11 @@ const AppBar = () => {
                                   xl:w-6 xl:h-6 xl:-top-5 xl:-right-4 xl:flex xl:items-center xl:justify-center"
               >
                 <span className="hidden text-xs font-bold text-white dark:text-[#00193B] xl:block">
-                  7
+                  {notiQuantity}
                 </span>
               </span>
             </div>
-            <div className="relative h-fit mt-1.5 xl:self-end xl:mt-0 xl:mr-1.5">
+            {/* <div className="relative h-fit mt-1.5 xl:self-end xl:mt-0 xl:mr-1.5">
               <button
                 className="text-lg leading-none text-gray dark:text-gray-red xl:text-[20px]"
                 onClick={() => setMessagesPanelOpen(true)}
@@ -140,7 +135,7 @@ const AppBar = () => {
                   2
                 </span>
               </span>
-            </div>
+            </div> */}
             <div className="relative">
               <button
                 className="h-8 w-8 rounded-full bg-accent text-widget text-sm flex items-center

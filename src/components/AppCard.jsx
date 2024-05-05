@@ -16,20 +16,42 @@ import { useEffect, useState } from "react";
 
 //api
 import { getInfouserById } from "@api_services/user.service";
+import { sendRequest } from "@api_services/order.service";
+import { toast } from "react-toastify";
 
 const AppCard = ({ app, index }) => {
   const [titleRef, { width: titleWidth }] = useMeasure();
   const [dataAuthor, setDataAuthor] = useState({});
 
+  const currentUser = JSON.parse(localStorage.getItem("user_data"));
+  // console.log("currentUser ::: ", currentUser.shop.user_id);
+
   useEffect(() => {
     (async () => {
       if (app.author_id) {
         const user = await getInfouserById(app.author_id);
-        console.log("user::", user);
         setDataAuthor(user.data.metadata);
       }
     })();
   }, []);
+
+  const handleSendRequest = async () => {
+    // console.log("card:::", app);
+    // console.log("card author:::", dataAuthor);
+    // ownerId, renterId, prodId
+    const params = {
+      ownerId: dataAuthor.user_id,
+      renterId: currentUser.shop.user_id,
+      prodId: app.id,
+    };
+    const res = await sendRequest(params);
+    // console.log("res:::", res);
+    if (res.data.status === 201) {
+      toast.success(
+        `Yêu cầu giữ phòng của bạn đã được gửi tới ${dataAuthor.name}. Vui lòng chờ phản hồi từ chủ phòng.`
+      );
+    }
+  };
 
   const optionViewImg = () => {
     if (app.listThumbs && app.listThumbs.length === 0) {
@@ -172,9 +194,11 @@ const AppCard = ({ app, index }) => {
       {/* them gach duoi */}
       {/* action  */}
       <div className="flex justify-around mt-auto h-16 pt-4 shrink">
-        <div className="text-btn cursor-pointer">Thich 100N</div>
-        <div className="text-btn cursor-pointer">Binh luan 200N</div>
-        <div className="text-btn cursor-pointer">Dat coc</div>
+        <div className="text-btn cursor-pointer">Thích</div>
+        <div className="text-btn cursor-pointer">Bình luận</div>
+        <div className="text-btn cursor-pointer" onClick={handleSendRequest}>
+          Giữ phòng
+        </div>
       </div>
     </Spring>
   );

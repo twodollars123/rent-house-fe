@@ -29,7 +29,7 @@ import { ToastContainer } from "react-toastify";
 import Copyright from "@components/Copyright";
 import AppBar from "@layout/AppBar";
 import Home from "@pages/Home";
-import SidebarV1 from "@layout/Sidebar.v1";
+// import SidebarV1 from "@layout/Sidebar.v1";
 
 // pages
 const Login = lazy(() => import("@pages/Login"));
@@ -39,6 +39,7 @@ const PostEdit = lazy(() => import("@pages/EditProduct"));
 const GeneralSettings = lazy(() => import("@pages/GeneralSettings"));
 const DetailPost = lazy(() => import("@pages/DetailPost"));
 const SearchPage = lazy(() => import("@pages/SearchPage"));
+const OrderPage = lazy(() => import("@pages/Order"));
 
 const App = () => {
   const { width } = useWindowSize();
@@ -74,6 +75,7 @@ const App = () => {
                 <Routes>
                   <Route path="/login" element={<Login />} />
                   <Route path="/post-editor" element={<PostEdit />} />
+                  <Route path="/orders" element={<OrderPage />} />
                   <Route path="/search" element={<SearchPage />} />
                   <Route path="/detail-post/:id" element={<DetailPost />} />
                   <Route

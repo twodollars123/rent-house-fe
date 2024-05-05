@@ -12,7 +12,7 @@ const ROUTESV2 = [
     ],
   },
   {
-    name: "Posts",
+    name: "Quản lý bài viết",
     icon: "boxes-stacked-regular",
     links: [
       { name: "Top Posts", path: "/top-products" },
@@ -21,7 +21,7 @@ const ROUTESV2 = [
     ],
   },
   {
-    name: "Orders",
+    name: "Quản lý yêu cầu",
     icon: "cart-shopping-regular",
     path: "/orders",
   },

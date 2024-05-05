@@ -13,17 +13,19 @@ import {
   getReplyCmt,
 } from "@api_services/comments.service";
 import { getInvenByProdId } from "@api_services/inventory.service";
+import { sendRequest } from "@api_services/order.service";
 
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 //assets
-import light from "@assets/logo_light.svg";
-import dark from "@assets/logo_dark.svg";
+// import light from "@assets/logo_light.svg";
+// import dark from "@assets/logo_dark.svg";
 import house from "@assets/house.png";
-import wallet from "@assets/coins.webp";
+// import wallet from "@assets/coins.webp";
 import ellipsis from "@assets/icons/ellipsis.svg";
 import { getInfoPaymentMethod } from "@api_services/paymentMethod.service";
+import { toast } from "react-toastify";
 // import MessageItem from "@components/MessageItem";
 
 const DetailPost = () => {
@@ -44,7 +46,7 @@ const DetailPost = () => {
 
   //user login
   const currentUser = JSON.parse(localStorage.getItem("user_data"));
-  console.log("currentUser ::: ", currentUser.shop.user_id);
+  // console.log("currentUser ::: ", currentUser.shop.user_id);
   const fetchData = async () => {
     const res = await findProdById(id);
     if (res) {
@@ -104,6 +106,24 @@ const DetailPost = () => {
     fetchDataInven();
     fetchDataPaymentMethod();
   }, []);
+
+  const handleSendRequest = async () => {
+    // console.log("card:::", app);
+    // console.log("card author:::", dataAuthor);
+    // ownerId, renterId, prodId
+    const params = {
+      ownerId: data.author_id,
+      renterId: currentUser.shop.user_id,
+      prodId: data.id,
+    };
+    const res = await sendRequest(params);
+    // console.log("res:::", res);
+    if (res.data.status === 201) {
+      toast.success(
+        `Yêu cầu giữ phòng của bạn đã được gửi tới ${dataAuthor.name}. Vui lòng chờ phản hồi từ chủ phòng.`
+      );
+    }
+  };
 
   const handlePostCommentRoot = async () => {
     const params = {
@@ -258,8 +278,10 @@ const DetailPost = () => {
         <hr class="h-px mt-4 border-0" style={{ background: "#fff" }}></hr>
         {/* action  */}
         <div className="flex justify-around h-8 pt-4">
-          <div className="text-btn cursor-pointer">Thich 100N</div>
-          <div className="text-btn cursor-pointer">Dat coc</div>
+          <div className="text-btn cursor-pointer">Thích</div>
+          <div className="text-btn cursor-pointer" onClick={handleSendRequest}>
+            Giữ phòng
+          </div>
         </div>
         <hr class="h-px mt-4 border-0" style={{ background: "#fff" }}></hr>
         {/* comments */}

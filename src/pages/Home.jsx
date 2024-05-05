@@ -2,7 +2,7 @@
 import AppCard from "@components/AppCard";
 import PageHeader from "@layout/PageHeader";
 import Sidebar from "@layout/Sidebar";
-import Loader from "@components/Loader";
+// import Loader from "@components/Loader";
 import InfiniteScrollCustom from "@components/InfiniteScrollCustom";
 
 import "./home.scss";
@@ -13,7 +13,7 @@ import dark from "@assets/logo_dark.svg";
 import house from "@assets/house.png";
 
 //library
-import InfiniteScroll from "react-infinite-scroll-component";
+// import InfiniteScroll from "react-infinite-scroll-component";
 import { useState, useEffect } from "react";
 
 //api
