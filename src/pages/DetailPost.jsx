@@ -1,8 +1,8 @@
 // components
-import PageHeader from "@layout/PageHeader";
+// import PageHeader from "@layout/PageHeader";
 import Fade from "@components/Slider/Fade";
-import Spring from "@components/Spring";
-import Switch from "@ui/Switch";
+// import Spring from "@components/Spring";
+// import Switch from "@ui/Switch";
 import TruncatedText from "@components/TruncatedText";
 
 import { findProdById, getThumbs } from "@api_services/prod.service";
@@ -12,6 +12,7 @@ import {
   getRootCmt,
   getReplyCmt,
 } from "@api_services/comments.service";
+import { getInvenByProdId } from "@api_services/inventory.service";
 
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -22,7 +23,8 @@ import dark from "@assets/logo_dark.svg";
 import house from "@assets/house.png";
 import wallet from "@assets/coins.webp";
 import ellipsis from "@assets/icons/ellipsis.svg";
-import MessageItem from "@components/MessageItem";
+import { getInfoPaymentMethod } from "@api_services/paymentMethod.service";
+// import MessageItem from "@components/MessageItem";
 
 const DetailPost = () => {
   const { id } = useParams();
@@ -32,6 +34,8 @@ const DetailPost = () => {
   const [dataCurrentUser, setDataCurrentUser] = useState({});
   const [dataListCmt, setDataListCmt] = useState([]);
   const [dataListRepCmt, setDataListRepCmt] = useState([]);
+  const [dataInven, setDataInven] = useState({});
+  const [dataPaymentMethod, setDataPaymentMethod] = useState({});
 
   const [cmtRootValue, setCmtRootValue] = useState("");
   const [cmtReplyValue, setCmtReplyValue] = useState("");
@@ -79,12 +83,26 @@ const DetailPost = () => {
     setDataListCmt(listCmts.data.metadata.listComments);
   };
 
+  const fetchDataInven = async () => {
+    const inventory = await getInvenByProdId(id);
+    console.log("inventory::::", inventory.data);
+    setDataInven(inventory.data.metadata.foundInven);
+  };
+
+  const fetchDataPaymentMethod = async () => {
+    const paymentMethod = await getInfoPaymentMethod(id);
+    console.log("paymentMethod::::", paymentMethod.data);
+    setDataPaymentMethod(paymentMethod.data.metadata.info);
+  };
+
   useEffect(() => {
     fetchData();
     fetchDataThumbs();
     fetchDataAuthor();
     fetchDataCurrentUser();
     fetchDataCmtRoot();
+    fetchDataInven();
+    fetchDataPaymentMethod();
   }, []);
 
   const handlePostCommentRoot = async () => {
@@ -166,6 +184,75 @@ const DetailPost = () => {
         {/* content and comment */}
         <div className="flex flex-col gap-4">
           <p className="content-post">{data.caption}</p>
+          <div className="grid grid-cols-1 gap-y-4 gap-x-2">
+            <p>Địa chỉ: {data.address}</p>
+          </div>
+          <div className="grid grid-cols-1 gap-y-4 gap-x-2">
+            <p>Thiết bị: </p>
+            <div className="grid grid-cols-2 grid-rows-2 gap-y-4 gap-x-2">
+              <div className="flex gap-2">
+                <label className="field-label min-w-[80px]" htmlFor="bed">
+                  Giường
+                </label>
+                <input
+                  type="checkbox"
+                  id="bed"
+                  checked={data.bed}
+                  disabled="true"
+                />
+              </div>
+              <div className="flex gap-2">
+                <label className="field-label min-w-[100px]" htmlFor="wardrobe">
+                  Tủ quần áo
+                </label>
+                <input
+                  type="checkbox"
+                  id="wardrobe"
+                  checked={data.wardrobe}
+                  disabled="true"
+                />
+              </div>
+              <div className="flex gap-2">
+                <label className="field-label min-w-[80px]" htmlFor="kitchen">
+                  Bàn bếp
+                </label>
+                <input
+                  type="checkbox"
+                  id="kitchen"
+                  checked={data.kitchen}
+                  disabled="true"
+                />
+              </div>
+              <div className="flex gap-2">
+                <label
+                  className="field-label min-w-[100px]"
+                  htmlFor="closed_toilet"
+                >
+                  Vệ sinh khép kín
+                </label>
+                <input
+                  type="checkbox"
+                  id="closed_toilet"
+                  checked={data.closed_toilet}
+                  disabled="true"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-y-4 gap-x-2">
+            <p>Chỗ để xe: {data.parking}</p>
+            <p>Điện : {data.electricity_price}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-y-4 gap-x-2">
+            <p>Nước: {data.water_price}</p>
+          </div>
+          <div className="grid grid-cols-2 gap-y-4 gap-x-2">
+            <p>Giá phòng: {data.romm_price}</p>
+            <p>Số phòng có sẵn : {dataInven.in_stock_quantity}</p>
+          </div>
+          <div className="grid grid-cols-1 gap-y-4 gap-x-2">
+            <p>Hình thức thanh toán: {dataPaymentMethod.mp_name}</p>
+          </div>
         </div>
         {/* them gach duoi */}
         <hr class="h-px mt-4 border-0" style={{ background: "#fff" }}></hr>

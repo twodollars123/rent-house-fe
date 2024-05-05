@@ -1,21 +1,11 @@
 // components
 import Spring from "@components/Spring";
-import Switch from "@ui/Switch";
-import TruncatedText from "@components/TruncatedText";
-import InfiniteScrollCustom from "@components/InfiniteScrollCustom";
 import AppCard from "@components/AppCard";
-//api
-import { findProdById, getThumbs } from "@api_services/prod.service";
-import { getInfouserById } from "@api_services/user.service";
-import {
-  addComment,
-  getRootCmt,
-  getReplyCmt,
-} from "@api_services/comments.service";
+
 //hooks
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 //assets
 import light from "@assets/logo_light.svg";
@@ -25,8 +15,13 @@ import wallet from "@assets/coins.webp";
 import ellipsis from "@assets/icons/ellipsis.svg";
 //lib
 import classNames from "classnames";
+import { toast } from "react-toastify";
 //api
-import { getPosts } from "@api_services/prod.service";
+import { findProdById, getThumbs } from "@api_services/prod.service";
+import {
+  searchByQuery,
+  searchDecayFn,
+} from "@api_services/elasticsearch.service";
 
 const SearchPage = () => {
   //user login
@@ -35,42 +30,53 @@ const SearchPage = () => {
   //init data
   const location = useLocation();
   const [items, setItems] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [page, setPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [totalPosts, setTotalPosts] = useState(100);
-  useEffect(() => {
+
+  const fetchDataSearchQuery = async () => {
     console.log("queery::", location);
+    const listPostsId = await searchByQuery(location.state);
+    console.log("result search::", listPostsId.data.hits);
+    if (listPostsId.data.hits?.length == 0) {
+      toast.error("không tìm thấy kết quả");
+    } else {
+      const listDataPost = listPostsId.data.hits.map(async (postItem) => {
+        const post = await findProdById(postItem._source.id);
+        const listThumbs = (await getThumbs(postItem._source.id)).data.metadata;
+        return { ...post.data.metadata.metadata.prod[0], listThumbs };
+      });
+      Promise.all(listDataPost).then((results) => {
+        console.log("resulfdshdfu::", results);
+        setItems((prevItems) => [...prevItems, ...results]);
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchDataSearchQuery();
   }, []);
 
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm({});
 
-  useEffect(() => {
-    (async () => {
-      const res = await getPosts(page, itemsPerPage);
-      const initData = res.data.metadata.metadata.data;
-      setTotalPosts(res.data.metadata.metadata.totalItems);
-      const data = initData.map(async (post) => {
-        const listThumbs = (await getThumbs(post.id)).data.metadata;
-        return { ...post, listThumbs };
-      });
-
-      Promise.all(data).then((results) =>
-        setItems((prevItems) => [...prevItems, ...results])
-      );
-    })();
-    if (items.length >= totalPosts) {
-      setHasMore(false);
-    }
-  }, [page]);
-
   const handlePublish = async (data) => {
     console.log("payload :::", data);
+    const listPostsId = await searchDecayFn(data);
+    console.log("id", listPostsId.data.hits);
+    if (listPostsId.data.hits?.length == 0) {
+      toast.error("không tìm thấy kết quả");
+    } else {
+      const listDataPost = listPostsId.data.hits.map(async (postItem) => {
+        const post = await findProdById(postItem._source.id);
+        const listThumbs = (await getThumbs(postItem._source.id)).data.metadata;
+        return { ...post.data.metadata.metadata.prod[0], listThumbs };
+      });
+      Promise.all(listDataPost).then((results) => {
+        console.log("resulfdshdfu::", results);
+        setItems(results);
+      });
+    }
   };
 
   return (
@@ -140,30 +146,15 @@ const SearchPage = () => {
             className="btn btn--primary"
             onClick={handleSubmit(handlePublish)}
           >
-            Publish Post
+            Tìm kiếm
           </button>
         </div>
       </Spring>
-      <div className="flex flex-1 w-7/12">
-        <div id="scrollableDiv" className="overflow-auto max-h-[100vh]">
-          <InfiniteScrollCustom
-            dataLength={items.length}
-            fetchMore={() => setPage((prev) => prev + 1)}
-            hasMore={hasMore}
-            className="flex flex-col gap-10 "
-            loader={<h4>Loading...</h4>}
-            endMessage={
-              <p style={{ textAlign: "center" }}>
-                <b>Yay! You have seen it all</b>
-              </p>
-            }
-          >
-            {items &&
-              items.map((card, index) => {
-                return <AppCard app={card} index={index} />;
-              })}
-          </InfiniteScrollCustom>
-        </div>
+      <div className="flex flex-1 w-7/12 overflow-auto flex-col gap-8">
+        {items &&
+          items.map((card, index) => {
+            return <AppCard app={card} index={index} />;
+          })}
       </div>
     </div>
   );
