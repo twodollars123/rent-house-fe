@@ -33,6 +33,7 @@ import Home from "@pages/Home";
 
 // pages
 const Login = lazy(() => import("@pages/Login"));
+const Signup = lazy(() => import("@pages/Signup"));
 const Banners = lazy(() => import("@pages/Banners"));
 const PageNotFound = lazy(() => import("@pages/PageNotFound"));
 const PostEdit = lazy(() => import("@pages/EditProduct"));
@@ -46,7 +47,8 @@ const App = () => {
   const appRef = useRef(null);
   const { theme } = useTheme();
   const path = useLocation().pathname;
-  const withSidebar = path !== "/login" && path !== "/404";
+  const withSidebar =
+    path !== "/login" && path !== "/404" && path !== "/signup";
 
   // Google Analytics init
   const gaKey = import.meta.env.VITE_GA;
@@ -74,6 +76,7 @@ const App = () => {
               <div className="main">
                 <Routes>
                   <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
                   <Route path="/post-editor" element={<PostEdit />} />
                   <Route path="/orders" element={<OrderPage />} />
                   <Route path="/search" element={<SearchPage />} />

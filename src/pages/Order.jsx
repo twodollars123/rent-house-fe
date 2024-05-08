@@ -5,6 +5,13 @@ import Select from "@ui/Select";
 import OrdersAverageRate from "@widgets/OrdersAverageRate";
 import OrdersInfobox from "@components/OrdersInfobox";
 import OrdersTable from "@widgets/OrdersTable";
+import Spring from "@components/Spring";
+
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 // hooks
 import { useState } from "react";
@@ -18,7 +25,6 @@ const Orders = () => {
 
   return (
     <>
-      <PageHeader title="Orders" />
       <div className="flex flex-col flex-1 gap-5 md:gap-[26px]">
         <div
           className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-[26px] lg:grid-cols-4 lg:items-end
@@ -27,27 +33,11 @@ const Orders = () => {
           <CalendarSelector
             wrapperClass="lg:max-w-[275px] lg:col-span-2 xl:col-span-4"
             id="ordersPeriodSelector"
+            label="Quản lý yêu cầu"
           />
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-[26px] md:col-span-2">
-            <Select
-              value={category}
-              options={PRODUCT_CATEGORIES}
-              onChange={setCategory}
-              placeholder="Product category"
-            />
-            <Select
-              value={sort}
-              options={ORDER_SORT_OPTIONS}
-              onChange={setSort}
-              placeholder="Default sorting"
-            />
-          </div>
         </div>
-        <div className="w-full widgets-grid grid-cols-1 xl:grid-cols-6">
-          <div className="xl:col-span-2">
-            <OrdersAverageRate />
-          </div>
-          <div className="widgets-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:col-span-4">
+        <div className="w-full widgets-grid grid-cols-1 xl:grid-cols-1">
+          {/* <div className="widgets-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:col-span-4">
             <OrdersInfobox
               title="Completed"
               count={2345}
@@ -71,9 +61,13 @@ const Orders = () => {
               color="badge-status-bg"
               icon={<i className="icon-rotate-left-solid" />}
             />
-          </div>
+          </div> */}
+          {/* <Spring className="card flex-1 xl:py-10">
+
+          </Spring> */}
         </div>
-        <OrdersTable category={category} sort={sort} />
+        <label className="h5 w-fit">Lịch sử:</label>
+        <OrdersTable />
       </div>
     </>
   );

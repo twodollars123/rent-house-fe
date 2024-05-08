@@ -14,3 +14,11 @@ export const login = async (email, password) => {
     }
   );
 };
+
+export const signup = async (params) => {
+  return await axios.post("http://localhost:3055/v1/api/user/signup", params, {
+    headers: {
+      "x-api-key": "privatekey1",
+    },
+  });
+};

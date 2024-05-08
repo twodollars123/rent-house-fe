@@ -7,3 +7,15 @@ export const sendRequest = async (params) => {
     },
   });
 };
+
+export const getHistory = async (params) => {
+  return await axios.post(
+    `http://localhost:3055/v1/api/order/getHistory`,
+    params,
+    {
+      headers: {
+        "x-api-key": "privatekey1",
+      },
+    }
+  );
+};

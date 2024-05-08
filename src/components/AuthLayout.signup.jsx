@@ -1,6 +1,5 @@
 // components
 import Logo from "@components/Logo";
-import { LoginSocialGoogle, LoginSocialFacebook } from "reactjs-social-login";
 import { toast } from "react-toastify";
 import Spring from "@components/Spring";
 import PasswordInput from "@components/PasswordInput";
@@ -15,13 +14,11 @@ import classNames from "classnames";
 
 // assets
 import media from "@assets/house.png";
-import google from "@assets/icons/google.png";
-import facebook from "@assets/icons/facebook.png";
 
 //api
-import { login } from "@api_services/auth.service";
+import { signup } from "@api_services/auth.service";
 
-const AuthLayout = () => {
+const SignupLayout = () => {
   const { width } = useWindowSize();
   const navigate = useNavigate();
   const {
@@ -32,27 +29,21 @@ const AuthLayout = () => {
   } = useForm({
     defaultValues: {
       email: "",
+      name: "",
       password: "",
     },
   });
 
   const onSubmit = async (data) => {
-    const { email, password } = data;
-    const user = await login(email, password);
-    if (user.data.status !== 200) {
-      toast.error(user.data.metadata.message);
+    const newUser = await signup(data);
+    console.log("newUser:::", newUser);
+    if (newUser.data.metadata.code === 201) {
+      toast.success(newUser.data.message);
+    } else {
+      toast.error(newUser.data.metadata.message);
       return;
     }
-    localStorage.setItem("user_data", JSON.stringify(user.data.metadata));
-    navigate("/");
-  };
-
-  const onReject = (err) => {
-    toast.error(err);
-  };
-
-  const handlePasswordReminder = (e) => {
-    e.preventDefault();
+    // navigate("/login");
   };
 
   return (
@@ -74,7 +65,7 @@ const AuthLayout = () => {
           delay={300}
         >
           <div className="flex flex-col gap-2.5 text-center">
-            <h1>Welcome back!</h1>
+            <h1>Sign up</h1>
           </div>
           <form className="mt-5" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-5">
@@ -92,6 +83,22 @@ const AuthLayout = () => {
                   {...register("email", {
                     required: true,
                     pattern: /^\S+@\S+$/i,
+                  })}
+                />
+              </div>
+              <div className="field-wrapper">
+                <label htmlFor="name" className="field-label">
+                  Name
+                </label>
+                <input
+                  className={classNames("field-input", {
+                    "field-input--error": errors.name,
+                  })}
+                  id="name"
+                  type="text"
+                  placeholder="Your full name"
+                  {...register("name", {
+                    required: true,
                   })}
                 />
               </div>
@@ -113,48 +120,23 @@ const AuthLayout = () => {
               />
             </div>
             <div className="flex flex-col items-center gap-6 mt-4 mb-10">
-              <button className="text-btn" onClick={handlePasswordReminder}>
-                Forgot Password?
-              </button>
-              <button className="btn btn--primary w-full">Log In</button>
+              <button className="btn btn--primary w-full">Sign up</button>
             </div>
           </form>
           <div>
             <div className="relative">
               <span className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[1px] bg-border" />
-              <span className="flex items-center justify-center relative z-10 w-11 h-[23px] m-auto bg-widget">
-                or
-              </span>
-            </div>
-            <div className="grid grid-cols-1 gap-4 2xs:grid-cols-2 xs:gap-[30px] mt-[30px] mb-9">
-              <LoginSocialGoogle
-                className="btn btn--social"
-                client_id={import.meta.env.VITE_GOOGLE_APP_ID}
-                onReject={onReject}
-                onResolve={onSubmit}
-              >
-                <img className="icon" src={google} alt="Google" />
-                Google
-              </LoginSocialGoogle>
-              <LoginSocialFacebook
-                className="btn btn--social"
-                appId={import.meta.env.VITE_FB_APP_ID}
-                onReject={onReject}
-                onResolve={onSubmit}
-              >
-                <img className="icon" src={facebook} alt="Facebook" />
-                Facebook
-              </LoginSocialFacebook>
+              <span className="flex items-center justify-center relative z-10 w-11 h-[23px] m-auto bg-widget"></span>
             </div>
             <div className="flex justify-center gap-2.5 leading-none">
-              <p>Don’t have an account?</p>
+              <p>Do you already have an account?</p>
               <button
                 className="text-btn"
                 onClick={() => {
-                  navigate("/signup");
+                  navigate("/login");
                 }}
               >
-                Sign Up
+                Log in
               </button>
             </div>
           </div>
@@ -164,4 +146,4 @@ const AuthLayout = () => {
   );
 };
 
-export default AuthLayout;
+export default SignupLayout;
