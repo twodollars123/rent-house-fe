@@ -17,12 +17,8 @@ import { ORDERS_COLUMN_DEFS } from "@constants/columnDefs";
 import orders from "@db/orders";
 
 const OrdersTable = () => {
-  //   const { width } = useWindowSize();
-
   return (
     <Spring className="flex flex-col flex-1 w-full">
-      {/* {
-                width >= 768 ? */}
       <StyledTable
         columns={ORDERS_COLUMN_DEFS}
         dataSource={orders}
@@ -32,20 +28,6 @@ const OrdersTable = () => {
         }}
         rowKey={(record) => record.orderNumber}
       />
-      {/* :
-                    <div className="flex flex-1 flex-col gap-5 mb-[26px]">
-                        {
-                            pagination.currentItems().map(order => (
-                                <OrderCollapseItem key={order.sku}
-                                                   order={order}
-                                                   activeCollapse={activeCollapse}
-                                                   handleCollapse={handleCollapse}
-                                />
-                            ))
-                        }
-                    </div>
-            } */}
-      {/* {pagination.maxPage > 1 && <Pagination pagination={pagination} />} */}
     </Spring>
   );
 };

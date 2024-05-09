@@ -78,8 +78,8 @@ const AppCard = ({ app, index }) => {
         {/* avartar-nameUser-createdPost */}
         <div className="flex flex-row gap-2 items-center">
           <img
-            className="h-9 w-auto rounded-full"
-            src={dataAuthor.avatar == null ? house : dataAuthor.avatar}
+            className="h-9 w-9 rounded-full overflow-hidden"
+            src={dataAuthor.avatar ?? house}
             alt={app.name}
           />
           <div className="flex flex-col">
@@ -87,7 +87,7 @@ const AppCard = ({ app, index }) => {
               className="max-w-[400px] w-full leading-[1.4] user-name"
               ref={titleRef}
             >
-              <TruncatedText text={dataAuthor.name} width={180} lines={1} />
+              <TruncatedText text={dataAuthor.name} width={240} lines={1} />
             </p>
             <p>
               <TruncatedText

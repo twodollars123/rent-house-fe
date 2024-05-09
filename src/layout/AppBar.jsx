@@ -17,6 +17,7 @@ import Logo from "@components/Logo";
 
 //api
 import { getNotifications } from "@api_services/notification.service";
+import { getInfouserById } from "@api_services/user.service";
 
 const AppBar = () => {
   const navigate = useNavigate();
@@ -25,12 +26,21 @@ const AppBar = () => {
   const [messagesPanelOpen, setMessagesPanelOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [notiQuantity, setNotiQuantity] = useState([]);
+  const [dataAuthor, setDataAuthor] = useState({});
 
   const { width } = useWindowSize();
   const { theme, toggleTheme } = useTheme();
 
   const currentUser = JSON.parse(localStorage.getItem("user_data"));
   // console.log("currentUser ::: ", currentUser.shop.user_id);
+
+  const fetchDataAuthor = async () => {
+    if (currentUser.shop.user_id) {
+      const user = await getInfouserById(currentUser.shop.user_id);
+      console.log("user111::", user);
+      setDataAuthor(user.data.metadata);
+    }
+  };
 
   const fetchDataNotidications = async () => {
     const params = {
@@ -45,6 +55,7 @@ const AppBar = () => {
   useEffect(() => {
     setSearchModalOpen(false);
     fetchDataNotidications();
+    fetchDataAuthor();
   }, [width]);
 
   return (
@@ -143,7 +154,15 @@ const AppBar = () => {
                 onClick={() => navigate("/general-settings")}
                 aria-label="Account menu"
               >
-                <i className="icon-user-solid" />
+                {dataAuthor.avatar ? (
+                  <img
+                    className="h-9 w-9 rounded-full overflow-hidden"
+                    src={dataAuthor.avatar}
+                    alt={""}
+                  />
+                ) : (
+                  <i className="icon-user-solid" />
+                )}
               </button>
               <span className="badge-online" />
             </div>
