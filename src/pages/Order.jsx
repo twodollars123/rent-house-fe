@@ -7,6 +7,7 @@ import { useState } from "react";
 
 // constants
 import { PRODUCT_CATEGORIES, ORDER_SORT_OPTIONS } from "@constants/options";
+import RequestsTable from "@widgets/RequestsTable";
 
 const Orders = () => {
   const [category, setCategory] = useState(PRODUCT_CATEGORIES[0]);
@@ -25,6 +26,7 @@ const Orders = () => {
             label="Quản lý yêu cầu"
           />
         </div>
+        <RequestsTable />
         <div className="w-full widgets-grid grid-cols-1 xl:grid-cols-1"></div>
         <label className="h5 w-fit">Lịch sử:</label>
         <OrdersTable />

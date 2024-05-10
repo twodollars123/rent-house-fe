@@ -8,9 +8,33 @@ export const sendRequest = async (params) => {
   });
 };
 
-export const getHistory = async (params) => {
+export const getHistoryRequest = async (params) => {
   return await axios.post(
-    `http://localhost:3055/v1/api/order/getHistory`,
+    `http://localhost:3055/v1/api/order/getHistoryRequest`,
+    params,
+    {
+      headers: {
+        "x-api-key": "privatekey1",
+      },
+    }
+  );
+};
+
+export const getRequest = async (params) => {
+  return await axios.post(
+    `http://localhost:3055/v1/api/order/getRequest`,
+    params,
+    {
+      headers: {
+        "x-api-key": "privatekey1",
+      },
+    }
+  );
+};
+
+export const updateStatus = async (params) => {
+  return await axios.post(
+    `http://localhost:3055/v1/api/order/updateStatus`,
     params,
     {
       headers: {

@@ -1,30 +1,24 @@
 // components
 import Spring from "@components/Spring";
 import StyledTable from "./styles";
-import Pagination from "@ui/Pagination";
-import OrderCollapseItem from "@components/OrderCollapseItem";
 import Empty from "@components/Empty";
 
 // hooks
-import usePagination from "@hooks/usePagination";
 import { useEffect, useState } from "react";
-import { useWindowSize } from "react-use";
 
 // constants
-import { ORDERS_COLUMN_DEFS } from "@constants/columnDefs";
+import { REQUEST_COLUMN_DEFS } from "@constants/columnDefs";
 
-// data placeholder
-import orders from "@db/orders";
 //api
-import { getHistoryRequest } from "@api_services/order.service";
+import { getRequest } from "@api_services/order.service";
 import { getThumbs } from "@api_services/prod.service";
 
-const OrdersTable = () => {
+const RequestsTable = () => {
   const [dataHistoryRequest, setDataHistoryRequest] = useState([]);
 
   const fetchData = async () => {
     const currentUser = JSON.parse(localStorage.getItem("user_data"));
-    let listHistoryRequest = await getHistoryRequest({
+    let listHistoryRequest = await getRequest({
       userId: currentUser.shop.user_id,
     });
 
@@ -55,7 +49,7 @@ const OrdersTable = () => {
       }
     );
     Promise.all(listHistoryRequest).then((values) => {
-      console.log("listHistoryReque::", values);
+      console.log("listRequest::", values);
       setDataHistoryRequest(values);
     });
   };
@@ -67,7 +61,7 @@ const OrdersTable = () => {
   return (
     <Spring className="flex flex-col flex-1 w-full">
       <StyledTable
-        columns={ORDERS_COLUMN_DEFS}
+        columns={REQUEST_COLUMN_DEFS}
         dataSource={dataHistoryRequest}
         pagination={false}
         locale={{
@@ -79,4 +73,4 @@ const OrdersTable = () => {
   );
 };
 
-export default OrdersTable;
+export default RequestsTable;

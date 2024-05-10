@@ -7,13 +7,29 @@ import Trend from "@ui/Trend";
 import Counter from "@components/Counter";
 
 // utils
-import { getCategory, getStatusColor, numFormatter } from "@utils/helpers";
+import { getStatusColor, numFormatter } from "@utils/helpers";
 import dayjs from "dayjs";
+
+//api
+import { updateStatus } from "@api_services/order.service";
+import { toast } from "react-toastify";
+
+const handleChangeStatus = async (process_id, status) => {
+  const updatedStatusResult = await updateStatus({
+    processId: process_id,
+    status: status,
+  });
+  if (updatedStatusResult.data.status === 200) {
+    toast.success(updatedStatusResult.data.message);
+  } else {
+    toast.error("Lỗi hệ thống. Liên hệ quản trị viên để biết thêm thông tin.");
+  }
+};
 
 export const ORDERS_COLUMN_DEFS = [
   {
     title: "# ID",
-    dataIndex: "orderNumber",
+    dataIndex: "process_id",
     width: "100px",
     render: (text) => <span className="subheading-2">#{text}</span>,
   },
@@ -24,12 +40,12 @@ export const ORDERS_COLUMN_DEFS = [
     render: (product) => (
       <div className="flex gap-6 ">
         <div className="img-wrapper w-[70px] h-[64px] flex items-center justify-center shrink-0">
-          <img src={product.image} alt={""} />
+          <img src={product.url} alt={""} />
         </div>
         <div className="flex-col hidden 2xl:flex">
           <h5 className="text-sm max-w-[195px] mb-1.5">{product.address}</h5>
           <div className="flex flex-col gap-1 text-sm">
-            <p>Regular price: ${product.price_room}</p>
+            <p>Giá: {product.price_room}</p>
             {/* {product.sale_price && <p>Sale price: ${product.sale_price}</p>} */}
           </div>
         </div>
@@ -40,8 +56,30 @@ export const ORDERS_COLUMN_DEFS = [
   {
     title: "Người yêu cầu",
     dataIndex: "rented_name",
-    width: "300px",
+    width: "2",
     render: (name) => <span className="label-text">{name}</span>,
+    responsive: ["lg"],
+  },
+  {
+    title: "Ngày tạo",
+    dataIndex: "createdAt",
+    width: "200px",
+    render: (name) => (
+      <span className="label-text">
+        {name && dayjs(name).format("DD/MM/YYYY")}
+      </span>
+    ),
+    responsive: ["lg"],
+  },
+  {
+    title: "Ngày cập nhật",
+    dataIndex: "updatedAt",
+    width: "200px",
+    render: (name) => (
+      <span className="label-text">
+        {name && dayjs(name).format("DD/MM/YYYY")}
+      </span>
+    ),
     responsive: ["lg"],
   },
   {
@@ -55,6 +93,87 @@ export const ORDERS_COLUMN_DEFS = [
       >
         {status}
       </span>
+    ),
+  },
+];
+
+export const REQUEST_COLUMN_DEFS = [
+  {
+    title: "# ID",
+    dataIndex: "process_id",
+    width: "100px",
+    render: (text) => <span className="subheading-2">#{text}</span>,
+  },
+  {
+    title: "Bài viết",
+    dataIndex: "product",
+    // className: "product-cell",
+    render: (product) => (
+      <div className="flex gap-6 ">
+        <div className="img-wrapper w-[70px] h-[64px] flex items-center justify-center shrink-0">
+          <img src={product.url} alt={""} />
+        </div>
+        <div className="flex-col hidden 2xl:flex">
+          <h5 className="text-sm max-w-[195px] mb-1.5">{product.address}</h5>
+          <div className="flex flex-col gap-1 text-sm">
+            <p>Giá: {product.price_room}</p>
+          </div>
+        </div>
+      </div>
+    ),
+    responsive: ["lg"],
+  },
+  {
+    title: "Người yêu cầu",
+    dataIndex: "rented_name",
+    width: "2",
+    render: (name) => <span className="label-text">{name}</span>,
+    responsive: ["lg"],
+  },
+  {
+    title: "Ngày tạo",
+    dataIndex: "createdAt",
+    width: "200px",
+    render: (name) => (
+      <span className="label-text">
+        {name && dayjs(name).format("DD/MM/YYYY")}
+      </span>
+    ),
+    responsive: ["lg"],
+  },
+  {
+    title: "Ngày cập nhật",
+    dataIndex: "updatedAt",
+    width: "200px",
+    render: (name) => (
+      <span className="label-text">
+        {name && dayjs(name).format("DD/MM/YYYY")}
+      </span>
+    ),
+    responsive: ["lg"],
+  },
+  {
+    title: "Trạng thái",
+    dataIndex: "process_id",
+    width: "100px",
+    render: (process_id) => (
+      <div className="flex gap-2">
+        <span
+          onClick={() => handleChangeStatus(process_id, 3)}
+          className="badge-status badge-status--lg cursor-pointer"
+          style={{ backgroundColor: `var(--${getStatusColor("3")})` }}
+        >
+          Chấp nhận
+        </span>
+
+        <span
+          onClick={() => handleChangeStatus(process_id, 4)}
+          className="badge-status badge-status--lg cursor-pointer"
+          style={{ backgroundColor: `var(--${getStatusColor("4")})` }}
+        >
+          Từ chối
+        </span>
+      </div>
     ),
   },
 ];
