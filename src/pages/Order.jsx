@@ -3,16 +3,11 @@ import CalendarSelector from "@components/CalendarSelector";
 import OrdersTable from "@widgets/OrdersTable";
 
 // hooks
-import { useState } from "react";
 
 // constants
-import { PRODUCT_CATEGORIES, ORDER_SORT_OPTIONS } from "@constants/options";
 import RequestsTable from "@widgets/RequestsTable";
 
 const Orders = () => {
-  const [category, setCategory] = useState(PRODUCT_CATEGORIES[0]);
-  const [sort, setSort] = useState(ORDER_SORT_OPTIONS[0]);
-
   return (
     <>
       <div className="flex flex-col flex-1 gap-5 md:gap-[26px]">

@@ -41,6 +41,7 @@ const GeneralSettings = lazy(() => import("@pages/GeneralSettings"));
 const DetailPost = lazy(() => import("@pages/DetailPost"));
 const SearchPage = lazy(() => import("@pages/SearchPage"));
 const OrderPage = lazy(() => import("@pages/Order"));
+const AccountPage = lazy(() => import("@pages/AccountManagement"));
 
 const App = () => {
   const { width } = useWindowSize();
@@ -79,6 +80,7 @@ const App = () => {
                   <Route path="/signup" element={<Signup />} />
                   <Route path="/post-editor" element={<PostEdit />} />
                   <Route path="/orders" element={<OrderPage />} />
+                  <Route path="/accounts" element={<AccountPage />} />
                   <Route path="/search" element={<SearchPage />} />
                   <Route path="/detail-post/:id" element={<DetailPost />} />
                   <Route

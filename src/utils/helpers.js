@@ -15,6 +15,19 @@ export const getTotal = (arr) => {
   return arr.reduce((acc, item) => acc + item.value, 0);
 };
 
+export const getRoleName = (role) => {
+  switch (role) {
+    case 1:
+      return "Admin";
+    case 2:
+      return "Người thuê phòng";
+    case 3:
+      return "Người cho thuê";
+    default:
+      return "";
+  }
+};
+
 /**
  *
  * @param num - number to be formatted

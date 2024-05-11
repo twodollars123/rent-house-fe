@@ -7,7 +7,7 @@ import Trend from "@ui/Trend";
 import Counter from "@components/Counter";
 
 // utils
-import { getStatusColor, numFormatter } from "@utils/helpers";
+import { getStatusColor, numFormatter, getRoleName } from "@utils/helpers";
 import dayjs from "dayjs";
 
 //api
@@ -94,6 +94,82 @@ export const ORDERS_COLUMN_DEFS = [
         {status}
       </span>
     ),
+  },
+];
+
+export const ACCOUNTS_COLUMN_DEFS = [
+  {
+    title: "# ID",
+    dataIndex: "id",
+    width: "100px",
+    render: (text) => <span className="subheading-2">#{text}</span>,
+  },
+  {
+    title: "Người dùng",
+    dataIndex: "user",
+    // className: "product-cell",
+    render: (product) => (
+      <div className="flex gap-6 ">
+        <div className="img-wrapper w-[70px] h-[64px] flex items-center justify-center shrink-0">
+          <img src={product.avatar} alt={""} />
+        </div>
+        <div className="flex-col hidden 2xl:flex">
+          <h5 className="text-sm max-w-[195px] mb-1.5">{product.name}</h5>
+        </div>
+      </div>
+    ),
+    responsive: ["lg"],
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    width: "200px",
+    render: (name) => <span className="label-text">{name}</span>,
+    responsive: ["lg"],
+  },
+  {
+    title: "Số điện thoại",
+    dataIndex: "phone_number",
+    width: "200px",
+    render: (name) => <span className="label-text">{name}</span>,
+    responsive: ["lg"],
+  },
+  {
+    title: "Quyền",
+    dataIndex: "role",
+    width: "200px",
+    render: (name) => (
+      <span className="label-text">{name && getRoleName(name)}</span>
+    ),
+    responsive: ["lg"],
+  },
+  {
+    title: "Ngày tạo",
+    dataIndex: "createdAt",
+    width: "200px",
+    render: (name) => (
+      <span className="label-text">
+        {name && dayjs(name).format("DD/MM/YYYY")}
+      </span>
+    ),
+    responsive: ["lg"],
+  },
+  {
+    title: "Ngày cập nhật",
+    dataIndex: "updatedAt",
+    width: "200px",
+    render: (name) => (
+      <span className="label-text">
+        {name && dayjs(name).format("DD/MM/YYYY")}
+      </span>
+    ),
+    responsive: ["lg"],
+  },
+  {
+    title: "Trạng thái",
+    dataIndex: "status",
+    width: "100px",
+    render: (status) => <span className="label-text">{status}</span>,
   },
 ];
 

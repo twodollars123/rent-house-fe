@@ -1,3 +1,5 @@
+import { icon } from "leaflet";
+
 const ROUTESV2 = [
   {
     name: "Dashboard",
@@ -26,11 +28,10 @@ const ROUTESV2 = [
     path: "/orders",
   },
   {
-    name: "Customers",
+    name: "Quản lý tài khoản",
     icon: "chart-user-regular",
-    path: "/customers",
+    path: "/accounts",
   },
-
   {
     name: "Pages",
     icon: "layer-group-regular",
