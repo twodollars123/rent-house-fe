@@ -98,9 +98,10 @@ const DetailPost = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData().then(() => {
+      fetchDataAuthor();
+    });
     fetchDataThumbs();
-    fetchDataAuthor();
     fetchDataCurrentUser();
     fetchDataCmtRoot();
     fetchDataInven();

@@ -45,17 +45,6 @@ const Home = () => {
     }
   }, [page]);
 
-  // const fetchMoreData = async () => {
-  //   console.log("page", page);
-  //   const data = await fetchData(page, 10);
-  //   setItems((prevItems) => [...prevItems, ...data]);
-  //   setPage(page + 1);
-  //   console.log("a");
-  //   if (data.length < itemsPerPage) {
-  //     setHasMore(false);
-  //   }
-  // };
-
   return (
     <>
       <PageHeader title="Home" />

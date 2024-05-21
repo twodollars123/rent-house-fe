@@ -9,9 +9,14 @@ import { Fragment } from "react";
 import { useState, useEffect } from "react";
 import { useWindowSize } from "react-use";
 
-// constants
-import ROUTES from "@constants/routes.v2";
+import { getDataCurrentuser } from "@utils/helpers";
 
+// constants
+import PRIVATEROUTES from "@constants/routes.v2";
+import PUBLICPOUTES from "@constants/publicRoutes";
+const { shop } = getDataCurrentuser();
+const { user_role } = shop;
+const ROUTES = user_role === 3 ? PUBLICPOUTES : PRIVATEROUTES;
 const Sidebar = () => {
   const { width } = useWindowSize();
   const [active, setActive] = useState("Dashboard");

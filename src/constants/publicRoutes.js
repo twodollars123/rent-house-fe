@@ -1,6 +1,6 @@
 import { icon } from "leaflet";
 
-const ROUTESV2 = [
+const PUBLICPOUTES = [
   {
     name: "Dashboard",
     icon: "rectangle-history-circle-user-regular",
@@ -18,24 +18,12 @@ const ROUTESV2 = [
   {
     name: "Quản lý bài viết",
     icon: "boxes-stacked-regular",
-    links: [
-      { name: "Danh sách bài viết yêu thích", path: "/top-products" },
-      {
-        name: "Quản lý bài viết",
-        path: "/posts-management",
-      },
-      { name: "Thêm bài viết mới", path: "/post-editor" },
-    ],
+    links: [{ name: "Danh sách bài viết yêu thích", path: "/top-products" }],
   },
   {
     name: "Quản lý yêu cầu",
     icon: "cart-shopping-regular",
     path: "/orders",
-  },
-  {
-    name: "Quản lý tài khoản",
-    icon: "chart-user-regular",
-    path: "/accounts",
   },
   {
     name: "Trang",
@@ -49,8 +37,8 @@ const ROUTESV2 = [
   {
     name: "Settings",
     icon: "gear-regular",
-    links: [{ name: "General Settings", path: "/general-settings" }],
+    links: [{ name: "Thông tin cá nhân", path: "/general-settings" }],
   },
 ];
 
-export default ROUTESV2;
+export default PUBLICPOUTES;

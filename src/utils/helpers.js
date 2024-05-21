@@ -129,3 +129,7 @@ export const getStatusColor = (status) => {
       return "badge-status-bg";
   }
 };
+
+export const getDataCurrentuser = () => {
+  return JSON.parse(localStorage.getItem("user_data"));
+};
