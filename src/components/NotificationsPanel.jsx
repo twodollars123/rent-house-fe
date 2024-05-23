@@ -52,6 +52,7 @@ const NotificationsPanel = ({ open, onOpen, onClose }) => {
         subcategory: noti.noti_typecode,
         text: noti.template,
         noti_receivedId: noti.noti_receivedid,
+        notiTypeId: noti.noti_typeid,
         user: {
           name: noti.name,
           avatar: noti.avatar || "https://placehold.it/100x100",
@@ -113,7 +114,7 @@ const NotificationsPanel = ({ open, onOpen, onClose }) => {
               text={item.label}
               value={item.value}
               active={filter}
-              qty={getQty(item.value)}
+              // qty={getQty(item.value)}
               onClick={() => setFilter(item.value)}
             />
           ))}
@@ -127,6 +128,7 @@ const NotificationsPanel = ({ open, onOpen, onClose }) => {
           <NotificationItem
             key={`${filter}-${index}`}
             notification={notification}
+            onClose={onClose}
             index={index}
             refetch={refetch}
           />

@@ -52,6 +52,12 @@ const DetailPost = () => {
     if (res) {
       console.log("res::", res.data.metadata.metadata.prod);
       setData(res.data.metadata.metadata.prod[0]);
+      const { author_id } = res.data.metadata.metadata.prod[0];
+      if (author_id) {
+        const user = await getInfouserById(author_id);
+        console.log("user::", user);
+        setDataAuthor(user.data.metadata);
+      }
     }
   };
 
@@ -60,14 +66,6 @@ const DetailPost = () => {
     if (thumbs) {
       console.log("thumbs::", thumbs);
       setListThumbs(thumbs.data.metadata);
-    }
-  };
-
-  const fetchDataAuthor = async () => {
-    if (data.author_id) {
-      const user = await getInfouserById(data.author_id);
-      console.log("user::", user);
-      setDataAuthor(user.data.metadata);
     }
   };
 
@@ -98,9 +96,7 @@ const DetailPost = () => {
   };
 
   useEffect(() => {
-    fetchData().then(() => {
-      fetchDataAuthor();
-    });
+    fetchData();
     fetchDataThumbs();
     fetchDataCurrentUser();
     fetchDataCmtRoot();
@@ -296,8 +292,8 @@ const DetailPost = () => {
                 <div className="flex flex-col gap-4" key={index}>
                   <div className="flex gap-4">
                     <img
-                      className="h-9 w-auto rounded-full"
-                      src={dataAuthor.avatar == null ? house : dataAuthor.avata}
+                      className="h-9 w-9 rounded-full"
+                      src={cmt.avatar ?? house}
                       alt={""}
                     />
                     <div
@@ -335,12 +331,8 @@ const DetailPost = () => {
                       style={{ background: "#f1f1f1" }}
                     >
                       <img
-                        className="h-9 w-auto rounded-full"
-                        src={
-                          dataCurrentUser.avatar == null
-                            ? house
-                            : dataAuthor.avatar
-                        }
+                        className="h-9 w-9 rounded-full"
+                        src={dataCurrentUser.avatar ?? house}
                         alt={""}
                       />
                       <div
@@ -371,10 +363,8 @@ const DetailPost = () => {
                         <div className="flex flex-col gap-4 ml-12" key={index}>
                           <div className="flex gap-4">
                             <img
-                              className="h-9 w-auto rounded-full"
-                              src={
-                                repCmt.avatar == null ? house : repCmt.avatar
-                              }
+                              className="h-9 w-9 rounded-full"
+                              src={repCmt.avatar ?? house}
                               alt={""}
                             />
                             <div
@@ -401,8 +391,8 @@ const DetailPost = () => {
             style={{ background: "#f1f1f1" }}
           >
             <img
-              className="h-9 w-auto rounded-full"
-              src={dataCurrentUser.avatar == null ? house : dataAuthor.avatar}
+              className="h-9 w-9 rounded-full"
+              src={dataCurrentUser.avatar ?? house}
               alt={""}
             />
             <div

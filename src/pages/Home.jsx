@@ -70,7 +70,9 @@ const Home = () => {
           </InfiniteScrollCustom>
         </div>
 
-        <div className="wrapper">thông tin ngoài lề thời tiết chứng khoán</div>
+        <div className="wrapper shink">
+          {/* thông tin ngoài lề thời tiết chứng khoán */}
+        </div>
       </div>
     </>
   );

@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 //api
 import { markSeenNotification } from "@api_services/notification.service";
+import { useNavigate } from "react-router-dom";
 
 dayjs.extend(relativeTime);
 
@@ -19,12 +20,27 @@ const placeholder = {
   },
 };
 
-const NotificationItem = ({ notification = placeholder, index, refetch }) => {
+const NotificationItem = ({
+  notification = placeholder,
+  index,
+  refetch,
+  onClose,
+}) => {
+  const navigate = useNavigate();
   const handleMarkSeen = async () => {
     await markSeenNotification({
       noti_receivedId: notification.noti_receivedId,
     });
     refetch();
+  };
+
+  const handleNavigateByNotiType = () => {
+    const { notiTypeId } = notification;
+    handleMarkSeen();
+    if (notiTypeId !== 1) {
+      navigate(`/orders`);
+      onClose();
+    }
   };
   return (
     <Spring className="notification with-border flex gap-2.5" index={index}>
@@ -42,7 +58,12 @@ const NotificationItem = ({ notification = placeholder, index, refetch }) => {
                     <span>{notification.subcategory}</span> */}
         </p>
         <div className="flex gap-2.5">
-          <button className="btn btn--outline size-xs blue">Accept</button>
+          <button
+            className="btn btn--outline size-xs blue"
+            onClick={handleNavigateByNotiType}
+          >
+            Accept
+          </button>
           <button
             className="btn btn--outline size-xs red"
             onClick={handleMarkSeen}
