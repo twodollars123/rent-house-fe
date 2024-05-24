@@ -375,8 +375,8 @@ const DetailPost = () => {
                                 text={
                                   "@" + repCmt.name + " " + repCmt.cmt_content
                                 }
-                                width={180}
-                                lines={1}
+                                width={240}
+                                lines={3}
                               />
                             </div>
                           </div>

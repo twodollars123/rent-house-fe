@@ -235,17 +235,17 @@ export const REQUEST_COLUMN_DEFS = [
     render: (process_id) => (
       <div className="flex gap-2">
         <span
-          onClick={() => handleChangeStatus(process_id, 3)}
+          onClick={() => handleChangeStatus(process_id, 4)}
           className="badge-status badge-status--lg cursor-pointer"
-          style={{ backgroundColor: `var(--${getStatusColor("3")})` }}
+          style={{ backgroundColor: `var(--${getStatusColor("4")})` }}
         >
           Chấp nhận
         </span>
 
         <span
-          onClick={() => handleChangeStatus(process_id, 4)}
+          onClick={() => handleChangeStatus(process_id, 3)}
           className="badge-status badge-status--lg cursor-pointer"
-          style={{ backgroundColor: `var(--${getStatusColor("4")})` }}
+          style={{ backgroundColor: `var(--${getStatusColor("3")})` }}
         >
           Từ chối
         </span>

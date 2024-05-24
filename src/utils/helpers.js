@@ -118,10 +118,10 @@ export const getStatusColor = (status) => {
     case "1":
     case "Chờ phản hồi":
       return "accent";
-    case "3":
+    case "4":
     case "Chấp nhận":
       return "green";
-    case "4":
+    case "3":
     case "Từ chối":
       return "red";
     case "rejected":
